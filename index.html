@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>추세 이탈 이벤트 분석</title>
+<style>
+  :root {
+    --bg: #ffffff; --surface: #f6f7f9; --border: #d8dce2;
+    --text: #16191d; --muted: #5b636e; --accent: #1f6feb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1216; --surface: #171b21; --border: #2b3138;
+      --text: #e6e9ee; --muted: #9aa4b1; --accent: #58a6ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 3rem 1.25rem 5rem;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR",
+                 Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  header h1 { margin: 0 0 .35rem; font-size: 1.75rem; letter-spacing: -.01em; }
+  header p { margin: 0 0 2.5rem; color: var(--muted); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
+  .card a {
+    display: block; padding: 1.15rem 1.3rem; text-decoration: none;
+    color: inherit; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 10px;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .card a:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .card h2 { margin: 0 0 .3rem; font-size: 1.05rem; color: var(--accent); }
+  .card p { margin: 0 0 .5rem; color: var(--text); font-size: .93rem; }
+  .meta { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .empty { color: var(--muted); padding: 2rem 0; }
+  footer { margin-top: 3rem; font-size: .82rem; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>추세 이탈 이벤트 분석</h1>
+      <p>SP500 추세 채널 이탈 이벤트와 선행 지표에 대한 연구 리포트</p>
+    </header>
+    <ul>
+      <li class="card">
+        <a href="reports/sp500-screener.html">
+          <h2>SP500 추세 채널 스크리너</h2>
+          <p>RANSAC 로그채널 스크리닝 500종목 + 인터랙티브 차트 + RMSE/ATR 이탈 순위</p>
+          <span class="meta">갱신 2026-08-25</span>
+        </a>
+      </li>
+    </ul>
+    <footer>
+      연구용 자료입니다. 투자 조언이 아닙니다. 과거 성과가 미래 수익을 보장하지 않습니다.
+    </footer>
+  </div>
+</body>
+</html>
