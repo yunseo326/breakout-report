@@ -87,10 +87,9 @@
     </header>
 
     <div class="callout">
-      <strong>진행 중인 리포트입니다.</strong> 9개 조합(창 3/5/7년 × 재적합 1/3/6개월) 중
-      7개가 끝난 시점의 결과입니다. 남은 2개(5년×1개월, 7년×1개월)가 끝나면 갱신합니다.
-      아래 결과는 이미 끝난 조합만으로도 결론을 흔들 여지가 크지 않지만, 최종 수치는
-      바뀔 수 있습니다.
+      <strong>9개 조합 중 8개 완료.</strong> 가장 오래 걸리는 마지막 조합(7년×1개월,
+      단일 조합에 약 4~5시간)은 나머지 8개가 이미 방향·유의성 모두 일관되게 나와서
+      추가 확인 실익이 적다고 판단해 실행하지 않았다. 아래는 8/9 기준 최종본이다.
     </div>
 
     <div class="status-row">
@@ -98,10 +97,10 @@
       <span class="pill done">3년 × 1개월</span>
       <span class="pill done">3년 × 3개월</span>
       <span class="pill done">3년 × 6개월</span>
-      <span class="pill pending">5년 × 1개월 — 진행 중</span>
+      <span class="pill done">5년 × 1개월</span>
       <span class="pill done">5년 × 3개월</span>
       <span class="pill done">5년 × 6개월</span>
-      <span class="pill pending">7년 × 1개월 — 예정</span>
+      <span class="pill pending">7년 × 1개월 — 미실행(중단)</span>
       <span class="pill done">7년 × 3개월</span>
       <span class="pill done">7년 × 6개월</span>
     </div>
@@ -219,7 +218,7 @@
 
     <h2>지금까지의 결론</h2>
     <p>
-      <strong>P1 기준선은 창 길이·재적합 주기 선택에 대해 강건해 보인다.</strong> 7개 완료
+      <strong>P1 기준선은 창 길이·재적합 주기 선택에 대해 강건해 보인다.</strong> 8개 완료
       조합 전부에서:
     </p>
     <ul>
@@ -239,9 +238,10 @@
       기반 위에 서 있다고 볼 근거가 생겼다.
     </p>
     <p class="note">
-      남은 2개 조합(5년×1개월, 7년×1개월)이 끝나면 1개월 재적합 열(column)도 3/5/7년 전부
-      채워져서 "재적합 주기" 축의 강건성까지 완전히 확인할 수 있다 — 지금은 3개월/6개월
-      재적합만 3/5/7년 전 구간이 채워진 상태.
+      1개월 재적합 열(column)은 1/3/5년까지 채워졌고 7년만 비어있다(위 이유로 미실행).
+      3개월·6개월 재적합은 3/5/7년 전 구간이 이미 채워져 있어, 창 길이 축의 강건성은
+      1년부터 7년까지 완전히 확인됐다 — 재적합 주기 축만 7년 지점 한 칸이 비어있는
+      상태로 마무리한다.
     </p>
 
     <footer>
@@ -257,12 +257,13 @@ const GRID = [
   {w:3, r:1, n:160105, tickers:495, mean:-0.94, lo:-1.01, hi:-0.86, rev:88.5},
   {w:3, r:3, n:143485, tickers:495, mean:-0.90, lo:-0.98, hi:-0.82, rev:86.7},
   {w:3, r:6, n:129658, tickers:495, mean:-0.97, lo:-1.05, hi:-0.89, rev:85.5},
+  {w:5, r:1, n:119813, tickers:492, mean:-1.13, lo:-1.21, hi:-1.04, rev:88.4},
   {w:5, r:3, n:108819, tickers:492, mean:-1.12, lo:-1.22, hi:-1.03, rev:87.2},
   {w:5, r:6, n:101313, tickers:492, mean:-1.16, lo:-1.25, hi:-1.06, rev:86.6},
   {w:7, r:3, n:85296,  tickers:482, mean:-1.04, lo:-1.14, hi:-0.94, rev:86.7},
   {w:7, r:6, n:79268,  tickers:482, mean:-1.02, lo:-1.12, hi:-0.92, rev:86.2},
 ];
-const PENDING = [ {w:5, r:1}, {w:7, r:1} ];
+const PENDING = [ {w:7, r:1} ];
 
 const SIDE = [
   {w:1,r:1,side:'above',n:62600,mean:2.84,lo:2.71,hi:2.96,win:57.5},
@@ -273,6 +274,8 @@ const SIDE = [
   {w:3,r:3,side:'below',n:78432,mean:-4.81,lo:-4.92,hi:-4.71,win:34.7},
   {w:3,r:6,side:'above',n:58732,mean:3.84,lo:3.72,hi:3.95,win:63.2},
   {w:3,r:6,side:'below',n:70926,mean:-4.94,lo:-5.04,hi:-4.83,win:34.4},
+  {w:5,r:1,side:'above',n:55028,mean:3.59,lo:3.47,hi:3.70,win:62.0},
+  {w:5,r:1,side:'below',n:64785,mean:-5.10,lo:-5.21,hi:-4.99,win:34.0},
   {w:5,r:3,side:'above',n:49664,mean:3.66,lo:3.54,hi:3.78,win:62.2},
   {w:5,r:3,side:'below',n:59155,mean:-5.11,lo:-5.23,hi:-5.00,win:34.0},
   {w:5,r:6,side:'above',n:45990,mean:3.75,lo:3.62,hi:3.88,win:62.1},
@@ -329,7 +332,7 @@ function fillGrid() {
     <tr>
       <td>${p.w}년</td>
       <td>${p.r}개월</td>
-      <td colspan="5" class="note">진행 중 / 예정 — 완료되면 갱신</td>
+      <td colspan="5" class="note">미실행(중단) — 나머지 8개 조합으로 결론 충분하다고 판단</td>
       <td></td>
     </tr>
   `).join('');
