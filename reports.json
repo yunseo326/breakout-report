@@ -1,5 +1,11 @@
 [
   {
+    "slug": "current-signals",
+    "title": "지금 채널을 벗어난 종목",
+    "description": "SP500 RANSAC 채널 스크리닝 — 오늘 기준 below/above 신호 목록",
+    "updated": "2026-08-28"
+  },
+  {
     "slug": "window-grid-robustness",
     "title": "채널 창 길이, 결과가 바뀌나",
     "description": "1/3/5/7년 롤링 채널 x 1/3/6개월 재적합 그리드로 P1 기준선 강건성 검증 (8/9 완료)",
