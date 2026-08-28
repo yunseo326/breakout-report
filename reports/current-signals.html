@@ -6089,19 +6089,23 @@
         upper.push(Math.exp(trendLog[i] + mult * base[i]));
         lower.push(Math.exp(trendLog[i] - mult * base[i]));
       }
-      var allVals = close.concat(upper, lower, trendPrice).filter(function (v) { return v != null && isFinite(v); });
+      var allVals = close.concat(upper, lower, trendPrice).filter(function (v) { return v != null && isFinite(v) && v > 0; });
       var lo = Math.min.apply(null, allVals), hi = Math.max.apply(null, allVals);
-      var pad = (hi - lo) * 0.06 || 1;
-      lo -= pad; hi += pad;
+      // 로그 스케일: 채널 자체가 log(가격) 기준으로 적합되므로(추세선 기울기·밴드 폭 전부
+      // 로그공간 값), y축도 로그로 그려야 밴드 폭이 실제처럼(가격 구간과 무관하게 %로
+      // 일정하게) 보인다. 선형 y축이면 고가 구간에서 밴드가 착시적으로 벌어져 보인다.
+      var logLo = Math.log(lo), logHi = Math.log(hi);
+      var pad = (logHi - logLo) * 0.06 || 0.05;
+      logLo -= pad; logHi += pad;
 
       var W = 900, H = 280, ML = 55, MR = 10, MT = 10, MB = 24;
       function x(i) { return ML + i / (n - 1) * (W - ML - MR); }
-      function y(v) { return MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB); }
+      function y(v) { return MT + (1 - (Math.log(v) - logLo) / (logHi - logLo)) * (H - MT - MB); }
 
       function pathFor(arr) {
         var d = '', started = false;
         for (var i = 0; i < n; i++) {
-          if (arr[i] == null || !isFinite(arr[i])) { started = false; continue; }
+          if (arr[i] == null || !isFinite(arr[i]) || arr[i] <= 0) { started = false; continue; }
           d += (started ? 'L' : 'M') + x(i).toFixed(1) + ',' + y(arr[i]).toFixed(1) + ' ';
           started = true;
         }
@@ -6109,9 +6113,9 @@
       }
 
       var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none">';
-      // y축 그리드 4줄
+      // y축 그리드 4줄 (로그공간에서 균등 분할 -> 눈금 값 자체는 지수적으로 커짐)
       for (var g = 0; g <= 4; g++) {
-        var v = lo + (hi - lo) * g / 4;
+        var v = Math.exp(logLo + (logHi - logLo) * g / 4);
         var yy = y(v);
         svg += '<line x1="' + ML + '" y1="' + yy + '" x2="' + (W - MR) + '" y2="' + yy + '" stroke="var(--border)" stroke-width="1"/>';
         svg += '<text x="' + (ML - 6) + '" y="' + (yy + 3) + '" font-size="10" fill="var(--muted)" text-anchor="end">' + v.toFixed(v >= 100 ? 0 : 2) + '</text>';
@@ -6154,6 +6158,7 @@
           '<span><span class="swatch" style="background:' + (side === 'above' ? 'var(--up)' : 'var(--down)') + '"></span>종가</span>' +
           '<span><span class="swatch" style="background:var(--muted)"></span>추세선</span>' +
           '<span><span class="swatch" style="background:var(--warn-text);border-top:2px dashed var(--warn-text);height:0;"></span>채널 밴드(' + channel + '×' + mult.toFixed(1) + ')</span>' +
+          '<span>· y축 로그 스케일(채널이 log가격 기준이라 밴드 폭이 %로 일정하게 보이도록)</span>' +
           '</div>';
       };
 

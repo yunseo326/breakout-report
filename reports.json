@@ -2,7 +2,7 @@
   {
     "slug": "current-signals",
     "title": "지금 채널을 벗어난 종목",
-    "description": "SP500 RANSAC 채널 스크리닝 — below/above 탭, 섹터/채널 필터, 클릭 시 이탈범위+주가차트",
+    "description": "SP500 RANSAC 채널 스크리닝 — 로그 스케일 차트, below/above 탭, 필터",
     "updated": "2026-08-28"
   },
   {
