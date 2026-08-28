@@ -6,6 +6,12 @@
     "updated": "2026-08-28"
   },
   {
+    "slug": "backtest-returns",
+    "title": "이탈 이벤트 실전 백테스트 수익률",
+    "description": "채널/볼린저 이탈 신호에 진입지연·손절·트레일링스톱을 반영한 트레이드·포트폴리오 백테스트 결과",
+    "updated": "2026-08-28"
+  },
+  {
     "slug": "window-grid-robustness",
     "title": "채널 창 길이, 결과가 바뀌나",
     "description": "1/3/5/7년 롤링 채널 x 1/3/6개월 재적합 그리드로 P1 기준선 강건성 검증 (8/9 완료)",

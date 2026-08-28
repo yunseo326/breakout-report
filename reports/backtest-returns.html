@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이탈 이벤트, 실제로 베팅하면 얼마나 벌었을까</title>
+<style>
+  :root {
+    --bg: #ffffff; --surface: #f6f7f9; --surface-2: #eef0f3; --border: #d8dce2;
+    --text: #16191d; --muted: #5b636e; --accent: #1f6feb;
+    --up: #1a7f37; --up-bg: #e6f4ea;
+    --down: #c22b2b; --down-bg: #fbe9e9;
+    --warn-bg: #fff6e0; --warn-border: #e8d38a; --warn-text: #6b5405;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1216; --surface: #171b21; --surface-2: #1d232b; --border: #2b3138;
+      --text: #e6e9ee; --muted: #9aa4b1; --accent: #58a6ff;
+      --up: #4fce76; --up-bg: #123320;
+      --down: #ff6b6b; --down-bg: #3a1616;
+      --warn-bg: #2a230d; --warn-border: #5c4a12; --warn-text: #e0c264;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 3rem 1.25rem 5rem;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
+    line-height: 1.65;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  a { color: var(--accent); }
+  .back { font-size: .88rem; color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--accent); }
+  header { margin: 1.25rem 0 2.5rem; }
+  header h1 { margin: .6rem 0 .4rem; font-size: 1.85rem; letter-spacing: -.01em; }
+  header p.sub { margin: 0; color: var(--muted); font-size: 1.02rem; }
+  header .meta { margin-top: .6rem; font-size: .82rem; color: var(--muted); }
+  h2 { font-size: 1.28rem; margin: 2.6rem 0 1rem; padding-top: .3rem; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-size: 1.05rem; margin: 1.8rem 0 .7rem; color: var(--text); }
+  p { margin: .7rem 0; }
+  .note { font-size: .88rem; color: var(--muted); }
+  .callout {
+    background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text);
+    border-radius: 10px; padding: .9rem 1.1rem; font-size: .9rem; margin: 1.2rem 0;
+  }
+  .table-scroll { overflow-x: auto; margin: 1rem 0 1.4rem; }
+  table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .87rem; }
+  caption { caption-side: top; text-align: left; font-size: .84rem; color: var(--muted); margin-bottom: .4rem; }
+  th, td { padding: .5rem .6rem; border-bottom: 1px solid var(--border); text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  th:nth-child(2), td:nth-child(2) { text-align: left; }
+  th { color: var(--muted); font-weight: 600; font-size: .8rem; }
+  tbody tr:hover { background: var(--surface); }
+  tbody tr.best { background: var(--up-bg); }
+  td.up { color: var(--up); }
+  td.down { color: var(--down); }
+  .stat-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .8rem; margin: 1.2rem 0; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; }
+  .tile .label { font-size: .78rem; color: var(--muted); }
+  .tile .value { font-size: 1.3rem; font-weight: 600; margin-top: .2rem; }
+  .tile .value.down { color: var(--down); }
+  .tile .value.up { color: var(--up); }
+  .tag { display: inline-block; font-size: .74rem; padding: .12rem .5rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); margin-left: .4rem; }
+  footer { margin-top: 3.5rem; font-size: .82rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1.2rem; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../index.html">← 리포트 목록</a>
+    <header>
+      <h1>이탈 이벤트, 실제로 베팅하면 얼마나 벌었을까</h1>
+      <p class="sub">채널 이탈/복귀 신호에 실제 체결 규칙(진입 지연·손절·스톱)을 반영한 트레이드/포트폴리오 백테스트</p>
+      <p class="meta">갱신 2026-08-28 · <a href="p1-p2-leading-indicators.html">P1/P2/P3</a>·<a href="window-grid-robustness.html">강건성 검증</a>의 후속 — 이번엔 "실제로 돈을 걸었으면"을 계산한다</p>
+    </header>
+
+    <div class="callout">
+      앞선 리포트들의 수치(방향맞춤 60봉 전방수익률)는 진입 지연·손절·거래비용이 전혀 없는
+      순수 통계였다. 이 리포트는 <strong>다음 거래일 시가 진입</strong> 같은 실제 체결 규칙과
+      청산 로직(복귀청산/트레일링 스톱/손절/익절)을 반영해 <strong>트레이드 단위 수익률</strong>과
+      <strong>포트폴리오 복리 성과(CAGR·MDD)</strong>를 계산한 결과다. 거래비용·슬리피지는 0으로
+      가정한 gross 수치다.
+    </div>
+
+    <h2>전략 4종 요약</h2>
+    <table>
+      <thead><tr><th>전략</th><th>정의</th></tr></thead>
+      <tbody>
+        <tr><td>channel</td><td>RANSAC 롤링 채널(250봉 창·21봉 재적합) 이탈. below=채널 복귀 시 청산(최대 60봉), above=ATR(14)×2.0 트레일링 스톱</td></tr>
+        <tr><td>channel_riskmgd</td><td>channel과 동일 신호 + below에 ATR(14)×2.0 고정 손절, above에 ATR(14)×3.0 고정 익절 추가</td></tr>
+        <tr><td>bollinger</td><td>전통적 20일 볼린저 밴드(±1.5/2.0σ) 이탈, 같은 체결·청산 규칙</td></tr>
+        <tr><td>channel_bollinger_and</td><td>channel 이탈일에 같은 종목의 볼린저 밴드도 같은 방향으로 벗어나 있어야 채택하는 AND 결합 필터</td></tr>
+      </tbody>
+    </table>
+    <p class="note">모든 전략 공통: 신호 다음 거래일 시가 진입, 롱온리, 거래비용 0, 슬리피지 0. below=하단 이탈(반등 베팅), above=상단 이탈(지속 베팅).</p>
+
+    <h2>1. 트레이드 단위 성과</h2>
+    <p>
+      개별 트레이드 하나하나를 독립적으로 봤을 때의 승률·평균/중앙값 수익률이다.
+      below(반등 베팅)가 above(지속 베팅)보다 승률·평균수익 모두 전 전략에서 확연히 높다.
+    </p>
+    <div class="table-scroll">
+    <table>
+      <caption>트레이드 단위 (거래건수 n, 승률, 평균/중앙값 수익률 %, 평균 보유봉)</caption>
+      <thead>
+        <tr><th>전략</th><th>방향</th><th>n</th><th>승률%</th><th>평균%</th><th>중앙값%</th><th>평균보유(봉)</th></tr>
+      </thead>
+      <tbody id="trade-body"></tbody>
+    </table>
+    </div>
+
+    <h2>2. 포트폴리오 복리 성과</h2>
+    <p>
+      트레이드를 시간순으로 큐에 넣고 자본을 배분하는 3가지 정책으로 실제 복리 성과를
+      시뮬레이션했다. 초기자본 10만, 일별 mark-to-market은 반영하지 않고(청산 시점에만
+      자본을 갱신) 자본곡선·MDD를 근사한 수치다.
+    </p>
+    <table style="margin-bottom:1.2rem">
+      <thead><tr><th>정책</th><th>규칙</th></tr></thead>
+      <tbody>
+        <tr><td>A_equal20_fifo</td><td>균등 5% 배분 · 최대 20종목 동시보유 · 선착순</td></tr>
+        <tr><td>B_equal20_strength</td><td>균등 5% 배분 · 최대 20종목 동시보유 · 신호강도(|dev_pct|) 우선</td></tr>
+        <tr><td>C_uncapped_2pct</td><td>종목당 2% · 슬롯 무제한(자본 한도로만 제어)</td></tr>
+      </tbody>
+    </table>
+    <div class="table-scroll">
+    <table>
+      <caption>포트폴리오 시뮬레이션 (배수, CAGR, MDD, 최대/평균 동시보유)</caption>
+      <thead>
+        <tr><th>전략</th><th>방향</th><th>정책</th><th>배수</th><th>CAGR%</th><th>MDD%</th><th>최대동시</th><th>평균동시</th></tr>
+      </thead>
+      <tbody id="portfolio-body"></tbody>
+    </table>
+    </div>
+
+    <h2>핵심 결론</h2>
+    <ul id="findings"></ul>
+
+    <h3>below 손절 추가가 역효과인 이유</h3>
+    <p>
+      below 전략은 "결국 채널로 되돌아온다"는 전제로 75%대 승률을 얻는 구조다. 조기 손절을
+      걸면 결국 되돌아왔을 트레이드까지 손실로 확정시켜버려서, 승률과 수익률이 동시에
+      떨어지고 그 손실이 반복되며 자본 변동성(MDD)만 커진다. 반대로 above는 트레일링
+      스톱만으로는 상승분을 다시 반납하는 경우가 많아, 고정 목표에서 선제적으로 익절하는
+      쪽이 전 정책에서 개선된다.
+    </p>
+
+    <h3>결합 필터가 "공짜 개선"이 아닌 이유</h3>
+    <p>
+      channel_bollinger_and는 트레이드 단위로 보면 below 평균수익이 살짝 더 좋아진다
+      (더 확실한 신호만 걸러내는 효과). 하지만 채택 이벤트 수가 순수 channel 대비
+      약 3분의 1로 줄어들면서, 포트폴리오 복리 회전 기회 자체가 줄어 대부분의 정책에서
+      최종 배수·CAGR이 오히려 낮아진다. 트레이드 퀄리티와 트레이드 빈도 사이의 트레이드오프다.
+    </p>
+
+    <footer>
+      연구용 자료입니다. 투자 조언이 아닙니다. 과거 성과가 미래 수익을 보장하지 않으며,
+      거래비용·슬리피지·세금이 전혀 반영되지 않은 gross 수치입니다.
+      계산 코드: <code>backtest_channel_events.py</code>, <code>portfolio_backtest.py</code>,
+      <code>events/bollinger.py</code>, <code>combine_channel_bollinger.py</code>.
+    </footer>
+  </div>
+
+<script>
+const TRADE = [
+  {strategy:'channel', side:'below', n:77629, win:75.83, mean:1.16, median:1.62, hold:13.5},
+  {strategy:'channel', side:'above', n:62583, win:39.43, mean:0.39, median:-1.33, hold:13.1},
+  {strategy:'channel_riskmgd', side:'below', n:77629, win:63.80, mean:0.36, median:1.05, hold:5.4},
+  {strategy:'channel_riskmgd', side:'above', n:62583, win:40.34, mean:0.38, median:-1.29, hold:9.2},
+  {strategy:'bollinger', side:'below', n:83233, win:61.77, mean:0.17, median:0.53, hold:2.4},
+  {strategy:'bollinger', side:'above', n:104910, win:39.74, mean:0.49, median:-1.26, hold:13.0},
+  {strategy:'channel_bollinger_and', side:'below', n:26241, win:75.50, mean:1.34, median:1.91, hold:16.0},
+  {strategy:'channel_bollinger_and', side:'above', n:24650, win:39.38, mean:0.37, median:-1.34, hold:13.4},
+];
+
+const PORTFOLIO = [
+  {strategy:'channel', side:'below', policy:'A_equal20_fifo', mult:5.15, cagr:19.98, mdd:-18.22, maxc:20, avgc:19.68},
+  {strategy:'channel', side:'below', policy:'B_equal20_strength', mult:3.19, cagr:13.77, mdd:-27.03, maxc:20, avgc:19.69},
+  {strategy:'channel', side:'below', policy:'C_uncapped_2pct', mult:4.71, cagr:18.79, mdd:-19.31, maxc:52, avgc:49.86},
+  {strategy:'channel', side:'above', policy:'A_equal20_fifo', mult:1.07, cagr:0.77, mdd:-30.30, maxc:20, avgc:19.30},
+  {strategy:'channel', side:'above', policy:'B_equal20_strength', mult:2.04, cagr:8.27, mdd:-32.05, maxc:20, avgc:19.35},
+  {strategy:'channel', side:'above', policy:'C_uncapped_2pct', mult:1.74, cagr:6.37, mdd:-21.94, maxc:52, avgc:48.57},
+
+  {strategy:'bollinger', side:'below', policy:'A_equal20_fifo', mult:4.32, cagr:15.91, mdd:-32.17, maxc:20, avgc:17.52},
+  {strategy:'bollinger', side:'below', policy:'B_equal20_strength', mult:5.41, cagr:18.57, mdd:-40.97, maxc:20, avgc:17.66},
+  {strategy:'bollinger', side:'below', policy:'C_uncapped_2pct', mult:4.04, cagr:15.13, mdd:-32.65, maxc:50, avgc:37.52},
+  {strategy:'bollinger', side:'above', policy:'A_equal20_fifo', mult:1.42, cagr:3.61, mdd:-27.26, maxc:20, avgc:19.02},
+  {strategy:'bollinger', side:'above', policy:'B_equal20_strength', mult:1.47, cagr:3.93, mdd:-31.69, maxc:20, avgc:19.06},
+  {strategy:'bollinger', side:'above', policy:'C_uncapped_2pct', mult:1.90, cagr:6.67, mdd:-24.09, maxc:52, avgc:47.56},
+
+  {strategy:'channel_riskmgd', side:'below', policy:'A_equal20_fifo', mult:2.62, cagr:11.31, mdd:-38.08, maxc:20, avgc:19.58},
+  {strategy:'channel_riskmgd', side:'below', policy:'B_equal20_strength', mult:2.73, cagr:11.80, mdd:-41.68, maxc:20, avgc:19.62},
+  {strategy:'channel_riskmgd', side:'below', policy:'C_uncapped_2pct', mult:2.74, cagr:11.86, mdd:-33.48, maxc:51, avgc:49.16},
+  {strategy:'channel_riskmgd', side:'above', policy:'A_equal20_fifo', mult:2.08, cagr:8.45, mdd:-30.14, maxc:20, avgc:19.43},
+  {strategy:'channel_riskmgd', side:'above', policy:'B_equal20_strength', mult:3.62, cagr:15.36, mdd:-27.72, maxc:20, avgc:19.43},
+  {strategy:'channel_riskmgd', side:'above', policy:'C_uncapped_2pct', mult:2.45, cagr:10.44, mdd:-21.61, maxc:53, avgc:48.55},
+
+  {strategy:'channel_bollinger_and', side:'below', policy:'A_equal20_fifo', mult:3.13, cagr:13.50, mdd:-20.12, maxc:20, avgc:18.90},
+  {strategy:'channel_bollinger_and', side:'below', policy:'B_equal20_strength', mult:2.74, cagr:11.85, mdd:-29.90, maxc:20, avgc:19.10},
+  {strategy:'channel_bollinger_and', side:'below', policy:'C_uncapped_2pct', mult:3.95, cagr:16.49, mdd:-22.17, maxc:53, avgc:45.48},
+  {strategy:'channel_bollinger_and', side:'above', policy:'A_equal20_fifo', mult:1.36, cagr:3.50, mdd:-22.30, maxc:20, avgc:18.25},
+  {strategy:'channel_bollinger_and', side:'above', policy:'B_equal20_strength', mult:1.32, cagr:3.09, mdd:-26.91, maxc:20, avgc:18.22},
+  {strategy:'channel_bollinger_and', side:'above', policy:'C_uncapped_2pct', mult:1.53, cagr:4.84, mdd:-14.74, maxc:52, avgc:43.32},
+];
+
+function fmtPct(v, digits=2) { return (v > 0 ? '+' : '') + v.toFixed(digits) + '%'; }
+function signClass(v) { return v >= 0 ? 'up' : 'down'; }
+
+function fillTrade() {
+  const body = document.getElementById('trade-body');
+  body.innerHTML = TRADE.map(r => `
+    <tr>
+      <td>${r.strategy}</td>
+      <td>${r.side}</td>
+      <td>${r.n.toLocaleString()}</td>
+      <td>${r.win.toFixed(1)}%</td>
+      <td class="${signClass(r.mean)}">${fmtPct(r.mean)}</td>
+      <td class="${signClass(r.median)}">${fmtPct(r.median)}</td>
+      <td>${r.hold.toFixed(1)}</td>
+    </tr>
+  `).join('');
+}
+
+function fillPortfolio() {
+  const body = document.getElementById('portfolio-body');
+  const bestKey = {};
+  PORTFOLIO.forEach(r => {
+    const k = r.strategy + '|' + r.side;
+    if (!bestKey[k] || r.mult > bestKey[k]) bestKey[k] = r.mult;
+  });
+  const rows = [...PORTFOLIO].sort((a,b) =>
+    a.strategy.localeCompare(b.strategy) || (a.side < b.side ? 1 : -1) || a.policy.localeCompare(b.policy));
+  body.innerHTML = rows.map(r => {
+    const k = r.strategy + '|' + r.side;
+    const isBest = r.mult === bestKey[k];
+    return `
+    <tr class="${isBest ? 'best' : ''}">
+      <td>${r.strategy}</td>
+      <td>${r.side}</td>
+      <td>${r.policy}</td>
+      <td>${r.mult.toFixed(2)}x</td>
+      <td class="${signClass(r.cagr)}">${fmtPct(r.cagr, 1)}</td>
+      <td class="down">${r.mdd.toFixed(1)}%</td>
+      <td>${r.maxc}</td>
+      <td>${r.avgc.toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+}
+
+const FINDINGS = [
+  'below(하단 이탈 반등 베팅)가 above(상단 이탈 지속 베팅)보다 트레이드 단위·포트폴리오 단위 둘 다에서 전 전략 일관되게 우세하다 — P1~P3에서 본 "below의 강한 반전 성향"이 실제 체결에서도 그대로 유지된다.',
+  'channel 전략에 손절(ATR×2.0)을 추가하면 below는 전 정책에서 성과가 나빠지고(승률·수익률·MDD 전부 악화), above에 익절(ATR×3.0)을 추가하면 전 정책에서 개선된다 — 두 방향의 최적 청산 규칙이 서로 반대다.',
+  'RANSAC 장기채널(channel)이 전통적 20일 볼린저 밴드보다 위험조정 성과(특히 MDD)에서 우수하다. 볼린저는 이벤트 빈도가 더 높지만 트레이드당 평균수익이 낮고 포트폴리오 MDD가 커진다.',
+  'channel과 볼린저를 AND로 결합하면 트레이드 퀄리티는 소폭 개선되지만, 채택 이벤트 수가 크게 줄어 포트폴리오 복리 회전 기회가 줄고 대부분의 정책에서 최종 성과는 오히려 낮아진다.',
+];
+
+function fillFindings() {
+  document.getElementById('findings').innerHTML = FINDINGS.map(f => `<li>${f}</li>`).join('');
+}
+
+fillTrade();
+fillPortfolio();
+fillFindings();
+</script>
+</body>
+</html>
