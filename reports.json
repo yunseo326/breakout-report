@@ -18,6 +18,12 @@
     "updated": "2026-08-31"
   },
   {
+    "slug": "best5-recommendation-manager",
+    "title": "Best5 최근 7일 추천·보유 관리",
+    "description": "최근 7일 추천, 매수 체크, 미매수 사유, 보유·매도·손익 및 JSON 장부 관리",
+    "updated": "2026-08-31"
+  },
+  {
     "slug": "comprehensive-report",
     "title": "추세 채널 연구 종합 보고서",
     "description": "Top5·78개 전략·5/10종목·장기 구간·무작위 검증을 포함한 전체 통합 비교",
