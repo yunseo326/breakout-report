@@ -20,7 +20,7 @@
   {
     "slug": "best5-recommendation-manager",
     "title": "Best5 최근 7일 추천·보유 관리",
-    "description": "최근 7일 추천, 매수 체크, 미매수 사유, 보유·매도·손익 및 JSON 장부 관리",
+    "description": "자연강도와 FIFO 선택기준, 최근 7일 추천, 매수 체크, 미매수 사유, 보유·매도·손익 관리",
     "updated": "2026-08-31"
   },
   {
