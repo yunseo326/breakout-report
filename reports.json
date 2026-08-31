@@ -18,6 +18,12 @@
     "updated": "2026-08-31"
   },
   {
+    "slug": "best5-trade-journal",
+    "title": "Best5 실제 체결 매매일지와 6개월 자연강도 보유",
+    "description": "동일종목 중복매수 규칙, 실제 수락 거래 100건, 최근 6개월 자연강도 매매 시 보유 종목",
+    "updated": "2026-08-31"
+  },
+  {
     "slug": "best5-recommendation-manager",
     "title": "Best5 최근 7일 추천·보유 관리",
     "description": "자연강도 정렬, 종목·전략 그룹 보기, 혼합 보기, 추천 및 보유·손익 관리",
