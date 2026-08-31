@@ -13,8 +13,8 @@
   },
   {
     "slug": "current-best5-dashboard",
-    "title": "공정 Best5 전략 현황",
-    "description": "동일기간 공정 순위, 현재 스크리닝·모의 보유 및 전략별 과거 차트 20개",
+    "title": "최대 CAGR Best5 전략 현황",
+    "description": "S8·RMSE하단·S3·S13·전환선기준선+피보나치 스크리닝, 모의보유, 과거 차트 100개",
     "updated": "2026-08-31"
   },
   {
