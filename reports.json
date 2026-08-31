@@ -6,6 +6,12 @@
     "updated": "2026-08-31"
   },
   {
+    "slug": "current-best5-dashboard",
+    "title": "공정 Best5 전략 현황",
+    "description": "동일기간 공정 순위, 현재 스크리닝·모의 보유 및 전략별 과거 차트 20개",
+    "updated": "2026-08-31"
+  },
+  {
     "slug": "comprehensive-report",
     "title": "추세 채널 연구 종합 보고서",
     "description": "Top5·78개 전략·5/10종목·장기 구간·무작위 검증을 포함한 전체 통합 비교",
