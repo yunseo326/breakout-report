@@ -6,6 +6,12 @@
     "updated": "2026-09-01"
   },
   {
+    "slug": "best5-daily-dashboard",
+    "title": "Best5 일일 매매 대시보드",
+    "description": "오늘 매수·청산·주의·목표근접 종목과 현재가·손절가·목표가",
+    "updated": "2026-09-01"
+  },
+  {
     "slug": "research-archive",
     "title": "과거 연구 기록",
     "description": "기존 보고서 원본을 보존한 연구 아카이브",
