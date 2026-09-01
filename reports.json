@@ -20,7 +20,7 @@
   {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
-    "description": "오늘 매수·청산·주의·목표근접 종목과 현재가·손절가·목표가 (거래량 필터 룩어헤드 수정본)",
+    "description": "ATR 기반 S8·S3 선택규칙을 반영한 오늘 매수·청산·주의·보유 종목",
     "updated": "2026-09-01"
   },
   {
