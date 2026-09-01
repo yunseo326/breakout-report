@@ -20,7 +20,7 @@
   {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
-    "description": "S8·RMSE×2 하단 전략을 최상단에 고정한 ATR 기반 보유 대시보드",
+    "description": "ATR 기반 선택, 손절·목표 퍼센트, 목표 도달률을 반영한 일일 대시보드 (TKFIB 제외, 4개 전략 운용)",
     "updated": "2026-09-01"
   },
   {
