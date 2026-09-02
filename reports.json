@@ -18,6 +18,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "comprehensive-report",
+    "title": "추세 채널 연구 종합 보고서",
+    "description": "Top5·78개 전략·5/10종목·장기 구간·무작위 검증을 포함한 전체 통합 비교",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "combination-backtest",
     "title": "채널과 선행지표 결합 동일 조건 백테스트",
     "description": "2023~2026 RMSE×2.0·종목당 한 포지션으로 below/above 기준선과 4개 상단 결합의 CAGR·MDD 공정 비교",
@@ -70,12 +76,6 @@
     "title": "Best5 실제 체결 매매일지와 6개월 자연강도 보유",
     "description": "동일종목 중복매수 규칙, 실제 수락 거래 100건, 최근 6개월 자연강도 매매 시 보유 종목",
     "updated": "2026-08-31"
-  },
-  {
-    "slug": "comprehensive-report",
-    "title": "추세 채널 연구 종합 보고서",
-    "description": "Top5·78개 전략·5/10종목·장기 구간·무작위 검증을 포함한 전체 통합 비교",
-    "updated": "2026-08-30"
   },
   {
     "slug": "window-grid-robustness",
