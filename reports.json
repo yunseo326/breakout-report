@@ -1,5 +1,11 @@
 [
   {
+    "slug": "best5-journal-analysis",
+    "title": "Best5 매매일지 사후분석",
+    "description": "5개 전략 매매일지 6,646건과 후보신호 71만건 재검증 + 손절 실험 + 거래량 필터 룩어헤드 정정",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
     "description": "ATR 기반 선택, 손절·목표 퍼센트(목표는 진입가 기준), 목표 도달률을 반영한 일일 대시보드",
@@ -27,12 +33,6 @@
     "slug": "best5-recommendation-manager",
     "title": "Best5 ATR 종목 스크리닝·보유 관리",
     "description": "S8·S3 ATR% 우선순위가 반영된 최근 7일 종목 스크리닝과 브라우저 보유 관리",
-    "updated": "2026-09-01"
-  },
-  {
-    "slug": "best5-journal-analysis",
-    "title": "Best5 매매일지 사후분석",
-    "description": "5개 전략 매매일지 6,646건과 후보신호 71만건 재검증 + 손절 실험 + 거래량 필터 룩어헤드 정정",
     "updated": "2026-09-01"
   },
   {
