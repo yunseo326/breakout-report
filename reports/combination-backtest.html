@@ -1,9 +1,116 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>채널과 선행지표 결합 동일 조건 백테스트</title>
-<style>:root{--bg:#fff;--fg:#171a1f;--muted:#626b76;--surface:#f5f7f9;--line:#d8dde4;--accent:#1769d2;--base:#fff6db}@media(prefers-color-scheme:dark){:root{--bg:#101318;--fg:#e8ebef;--muted:#9ba5b2;--surface:#181d24;--line:#303842;--accent:#68a7ff;--base:#332b13}}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 system-ui,"Noto Sans KR",sans-serif}main{max-width:1180px;margin:auto;padding:44px 20px 72px}h1{font-size:30px;margin:.3em 0}h2{margin-top:40px;border-top:1px solid var(--line);padding-top:24px}.sub,.note{color:var(--muted)}.callout{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:850px;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}tr.base{background:var(--base)}a{color:var(--accent)}</style></head><body><main>
-<a href="../index.html">← 리포트 목록</a><h1>채널과 선행지표 결합 동일 조건 백테스트</h1>
-<p class="sub">2023~2026 · RMSE×2.0 · 다음날 시가 진입 · 종목당 동시 1포지션 · 비용 0%</p>
-<div class="callout"><b>결론:</b> 하단 반등 기준선 최고 CAGR은 <b>26.1%</b>, 상단 지속 기준선은 <b>10.7%</b>였다. 상단 결합 중 최고는 <b>수평SR + 실적거리 5.6%</b>로 상단 기준선보다 낮았다. 네 결합은 트레이드당 품질과 MDD는 개선했지만 신호 감소로 전체 복리수익은 낮아졌다. 기존 보고서의 20%대 수치는 방향이 다른 하단 반등 전략이며, 동일 조건에서도 강한 성과가 유지됐다.</div>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>채널·선행지표 결합 백테스트</title>
+<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap'><style>
+:root{
+  color-scheme:light dark;
+  --bg:#eef1f6; --surface:#ffffff; --surface-2:#f5f7fb; --ink:#16213e; --mut:#5b6788; --line:#d9dee8;
+  --accent:#a8531c; --accent-ink:#7a3c14; --channel:#166e63; --breakout:#a8531c;
+  --pos:#1a7a4c; --neg:#b23b3b; --warn-bg:#fdf3df; --warn-line:#d9b667;
+  --note-bg:#f2f6ff; --note-line:#c7d6f5;
+  --serif:"Noto Serif KR",Georgia,serif; --sans:"Noto Sans KR",-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono","Noto Sans KR",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1320; --surface:#171d2c; --surface-2:#1c2335; --ink:#e8ecf6; --mut:#94a1c2; --line:#2a3348;
+    --accent:#e0904f; --accent-ink:#f0a86a; --channel:#4fb6a6; --breakout:#e0904f;
+    --pos:#52d38b; --neg:#f5807f; --warn-bg:#2a2412; --warn-line:#5c4a1d;
+    --note-bg:#182238; --note-line:#2d4470;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1320; --surface:#171d2c; --surface-2:#1c2335; --ink:#e8ecf6; --mut:#94a1c2; --line:#2a3348;
+  --accent:#e0904f; --accent-ink:#f0a86a; --channel:#4fb6a6; --breakout:#e0904f;
+  --pos:#52d38b; --neg:#f5807f; --warn-bg:#2a2412; --warn-line:#5c4a1d;
+  --note-bg:#182238; --note-line:#2d4470;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+.page{max-width:1320px;margin:0 auto;padding:36px 20px 100px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:44px}
+@media (max-width:980px){.page{grid-template-columns:1fr}}
+.page.narrow{display:block;max-width:1180px}
+.toc{position:sticky;top:24px;align-self:start;font-size:12.5px;display:flex;flex-direction:column;gap:2px}
+@media (max-width:980px){.toc{position:static;flex-direction:row;overflow-x:auto;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:8px}}
+.toc a{color:var(--mut);text-decoration:none;padding:6px 8px;border-radius:6px;white-space:nowrap;border-left:2px solid transparent}
+.toc a:hover{color:var(--ink);background:var(--surface)}
+@media (min-width:981px){.toc a{border-left:2px solid var(--line)}}
+main{min-width:0}
+nav.top{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;font-size:12.5px}
+nav.top a{color:var(--mut);text-decoration:none;padding:6px 10px;border-radius:7px;border:1px solid transparent}
+nav.top a:hover{color:var(--ink);background:var(--surface);border-color:var(--line)}
+.eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+h1{font:700 30px/1.25 var(--serif);letter-spacing:-.01em;margin:10px 0 8px;text-wrap:balance}
+.dek{color:var(--mut);max-width:66ch;margin:0 0 22px}
+.statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.stat{background:var(--surface);padding:14px 16px}
+.stat b{display:block;font:600 20px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--mut)}
+h2{font:700 21px/1.3 var(--serif);margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--line);scroll-margin-top:20px}
+h2 small{font:400 13px var(--sans);color:var(--mut);margin-left:6px}
+h3{font:600 14.5px/1.4 var(--sans);margin:26px 0 10px;color:var(--mut);display:flex;align-items:center;gap:8px}
+p{margin:10px 0;max-width:74ch}
+.mut{color:var(--mut)}
+.hero-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px 18px;margin-bottom:6px}
+.findings{display:flex;flex-direction:column;gap:10px;margin:18px 0}
+.key{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:14px 16px 14px 52px;position:relative}
+.key .n{position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font:600 12.5px var(--mono);color:var(--accent-ink)}
+.key b{display:block;font:600 14.5px/1.4 var(--sans);margin-bottom:3px}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:11px;padding:14px 18px;margin:14px 0}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:11px;padding:14px 18px;margin:14px 0}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--surface);margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:12.5px;white-space:nowrap}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:right}
+th{background:var(--surface-2);position:sticky;top:0;font:600 11.5px var(--sans);color:var(--mut);
+  text-transform:uppercase;letter-spacing:.03em}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+td.num,td.labelcell{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px}
+td:first-child,td:nth-child(2){font-family:var(--sans)}
+td.num.pos{color:var(--pos)}
+td.num.neg{color:var(--neg)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;flex:none}
+.dot.breakout{background:var(--breakout)}
+.dot.channel{background:var(--channel)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--mut);margin:2px 0 16px}
+.legend span{display:flex;align-items:center}
+ul{margin:10px 0 10px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+li{padding-left:18px;position:relative;max-width:74ch}
+li::before{content:"–";position:absolute;left:0;color:var(--mut)}
+code{background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font:12px var(--mono)}
+footer{margin-top:50px;padding-top:16px;border-top:1px solid var(--line);color:var(--mut);font-size:12px}
+.price-pct{color:var(--mut);font-size:11px}
+.dup{display:inline-block;background:var(--surface-2);color:var(--accent-ink);border:1px solid var(--line);
+  border-radius:999px;padding:1px 7px;font-size:10px;font-weight:600;margin-left:5px}
+.sort-col button{border:0;background:transparent;padding:0;color:inherit;font:inherit;font-weight:600;cursor:pointer}
+.sort-col button:hover,.sort-col button:focus{color:var(--accent-ink)}
+.sort-col span{display:inline-block;min-width:12px;color:var(--mut)}
+details.guide{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:10px 18px;margin:14px 0}
+details.guide summary{cursor:pointer;font-weight:600;color:var(--mut);padding:4px 0}
+details.guide p{font-size:13px}
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pos);margin-right:6px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--pos) 22%,transparent)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:14px 0 8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  display:flex;flex-direction:column;height:100%;text-decoration:none;color:inherit;
+  transition:border-color .15s ease,transform .15s ease}
+.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card h3{margin:0 0 6px;color:var(--accent-ink);font:600 14.5px/1.4 var(--sans)}
+.card p{margin:0 0 10px;font-size:12.5px;color:var(--ink);max-width:none}
+.card .meta{margin-top:auto;font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
+  text-decoration:none;padding:9px 16px;border-radius:8px;font:600 13px var(--sans);white-space:nowrap}
+.btn:hover{background:var(--accent-ink)}
+
+tr.base{background:var(--warn-bg)}
+</style></head><body><div class="page narrow"><main>
+<nav class="top"><a href="../index.html">리포트 목록</a></nav>
+<span class="eyebrow">Combination Backtest</span>
+<h1>채널과 선행지표 결합 동일 조건 백테스트</h1>
+<p class="dek">2023~2026 · RMSE×2.0 · 다음날 시가 진입 · 종목당 동시 1포지션 · 비용 0%</p>
+<div class="note"><b>결론:</b> 하단 반등 기준선 최고 CAGR은 <b>26.1%</b>, 상단 지속 기준선은 <b>10.7%</b>였다. 상단 결합 중 최고는 <b>수평SR + 실적거리 5.6%</b>로 상단 기준선보다 낮았다. 네 결합은 트레이드당 품질과 MDD는 개선했지만 신호 감소로 전체 복리수익은 낮아졌다. 기존 보고서의 20%대 수치는 방향이 다른 하단 반등 전략이며, 동일 조건에서도 강한 성과가 유지됐다.</div>
 <h2>1. 트레이드 단위</h2><div class="scroll"><table><thead><tr><th>조건</th><th>거래수</th><th>평균수익률%</th><th>중앙값%</th><th>승률%</th><th>평균보유봉</th></tr></thead><tbody><tr class="base"><td>기준선 below</td><td>5,528</td><td>1.57</td><td>1.70</td><td>75.9</td><td>10.6</td></tr><tr class="base"><td>기준선 above</td><td>4,432</td><td>0.33</td><td>-1.58</td><td>38.8</td><td>8.9</td></tr><tr class=""><td>계절성 + 실적거리</td><td>433</td><td>0.80</td><td>-0.94</td><td>43.2</td><td>8.8</td></tr><tr class=""><td>전환선기준선 + 실적거리</td><td>366</td><td>0.94</td><td>-1.15</td><td>41.5</td><td>8.9</td></tr><tr class=""><td>일목구름 + 수평SR</td><td>283</td><td>1.53</td><td>-0.68</td><td>45.2</td><td>8.4</td></tr><tr class=""><td>수평SR + 실적거리</td><td>390</td><td>1.20</td><td>-1.08</td><td>44.1</td><td>8.9</td></tr></tbody></table></div>
 <h2>2. 포트폴리오 단위</h2><div class="scroll"><table><thead><tr><th>조건</th><th>정책</th><th>최종배수</th><th>CAGR%</th><th>MDD%</th><th>채택/후보</th><th>평균동시보유</th></tr></thead><tbody><tr class="base"><td>기준선 below</td><td>A_equal20_fifo</td><td>2.33</td><td>26.1</td><td>-8.2</td><td>1,522/5,528</td><td>18.8</td></tr><tr class="base"><td>기준선 below</td><td>B_equal20_strength</td><td>2.00</td><td>20.9</td><td>-9.5</td><td>1,245/5,528</td><td>19.0</td></tr><tr class="base"><td>기준선 below</td><td>C_uncapped_2pct</td><td>2.19</td><td>24.0</td><td>-4.6</td><td>3,262/5,528</td><td>40.2</td></tr><tr class="base"><td>기준선 above</td><td>A_equal20_fifo</td><td>1.36</td><td>8.7</td><td>-18.4</td><td>1,785/4,432</td><td>18.0</td></tr><tr class="base"><td>기준선 above</td><td>B_equal20_strength</td><td>1.45</td><td>10.7</td><td>-16.4</td><td>1,783/4,432</td><td>18.1</td></tr><tr class="base"><td>기준선 above</td><td>C_uncapped_2pct</td><td>1.31</td><td>7.8</td><td>-11.3</td><td>3,034/4,432</td><td>30.9</td></tr><tr class=""><td>계절성 + 실적거리</td><td>A_equal20_fifo</td><td>1.14</td><td>4.2</td><td>-5.6</td><td>266/433</td><td>3.9</td></tr><tr class=""><td>계절성 + 실적거리</td><td>B_equal20_strength</td><td>1.13</td><td>4.0</td><td>-4.8</td><td>273/433</td><td>3.5</td></tr><tr class=""><td>계절성 + 실적거리</td><td>C_uncapped_2pct</td><td>1.07</td><td>2.1</td><td>-2.6</td><td>349/433</td><td>4.4</td></tr><tr class=""><td>전환선기준선 + 실적거리</td><td>A_equal20_fifo</td><td>1.17</td><td>4.4</td><td>-6.2</td><td>300/366</td><td>3.1</td></tr><tr class=""><td>전환선기준선 + 실적거리</td><td>B_equal20_strength</td><td>1.17</td><td>4.4</td><td>-6.2</td><td>300/366</td><td>3.1</td></tr><tr class=""><td>전환선기준선 + 실적거리</td><td>C_uncapped_2pct</td><td>1.07</td><td>1.8</td><td>-2.5</td><td>300/366</td><td>3.1</td></tr><tr class=""><td>일목구름 + 수평SR</td><td>A_equal20_fifo</td><td>1.18</td><td>4.6</td><td>-3.3</td><td>243/283</td><td>2.4</td></tr><tr class=""><td>일목구름 + 수평SR</td><td>B_equal20_strength</td><td>1.18</td><td>4.6</td><td>-3.3</td><td>243/283</td><td>2.4</td></tr><tr class=""><td>일목구름 + 수평SR</td><td>C_uncapped_2pct</td><td>1.07</td><td>1.8</td><td>-1.3</td><td>243/283</td><td>2.4</td></tr><tr class=""><td>수평SR + 실적거리</td><td>A_equal20_fifo</td><td>1.22</td><td>5.6</td><td>-6.3</td><td>299/390</td><td>3.0</td></tr><tr class=""><td>수평SR + 실적거리</td><td>B_equal20_strength</td><td>1.22</td><td>5.6</td><td>-6.3</td><td>299/390</td><td>3.0</td></tr><tr class=""><td>수평SR + 실적거리</td><td>C_uncapped_2pct</td><td>1.08</td><td>2.2</td><td>-2.6</td><td>299/390</td><td>3.0</td></tr></tbody></table></div>
 <h2>읽을 때 주의</h2><ul><li>below는 채널 복귀 또는 60봉 청산, above는 ATR×2 트레일링+ATR×3 익절이다. 방향 특성 때문에 청산 규칙은 다르다.</li><li>거래비용·슬리피지는 0%인 gross 결과다.</li><li>포트폴리오 MDD는 일별 mark-to-market이 아니라 청산 시점 손익만 반영한 근사치다.</li><li>모든 정책에서 한 종목은 동시에 한 포지션만 허용했다. A/B는 종목당 5%·최대 20종목이며 B는 같은 날 신호강도 우선, C는 종목당 2%·슬롯 무제한이다.</li><li>결합 조건은 2016~2022년에 선택되고 2023년 이후에 고정됐지만, 미래 성과를 보장하지 않는다.</li></ul>
-</main></body></html>
+</main></div></body></html>
