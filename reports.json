@@ -24,6 +24,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "feature-combinations",
+    "title": "선행지표 결합, 표본 밖에서도 통할까",
+    "description": "RMSE 채널 이탈에 RSI·일목·계절성·수평 S/R·피보나치·실적거리 2·3지표를 결합한 2023~2026 표본 밖 검증",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "fair-strategy-ranking",
     "title": "최대 CAGR 전체 78개 전략 순위",
     "description": "각 전략의 최대 CAGR 조건 기준 순위, 검색·정렬·4조건 세부결과",
@@ -88,12 +94,6 @@
     "title": "78개 전략 카탈로그 사후평가",
     "description": "Best5를 뽑아낸 78개 전략·312셀 선택 절차의 표본 밖 검증 + 62개 조합·16개 원자 기여도 재측정",
     "updated": "2026-09-02"
-  },
-  {
-    "slug": "feature-combinations",
-    "title": "선행지표 결합, 표본 밖에서도 통할까",
-    "description": "RMSE 채널 이탈에 RSI·일목·계절성·수평 S/R·피보나치·실적거리 2·3지표를 결합한 2023~2026 표본 밖 검증",
-    "updated": "2026-08-29"
   },
   {
     "slug": "backtest-returns",
