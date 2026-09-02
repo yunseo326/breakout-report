@@ -48,6 +48,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "best5-trade-journal",
+    "title": "Best5 실제 체결 매매일지와 6개월 자연강도 보유",
+    "description": "동일종목 중복매수 규칙, 실제 수락 거래 100건, 최근 6개월 자연강도 매매 시 보유 종목",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "best5-six-month-holdings-2026-08-31",
     "title": "Best5 6개월 자연강도 보유 종목 — 2026-08-31 정정",
     "description": "종료일 미청산 포지션을 유지해 정정한 2026-08-31 기준 Best5 자연강도 보유 종목",
@@ -76,12 +82,6 @@
     "title": "Best5 ATR 종목 스크리닝·보유 관리",
     "description": "S8·S3 ATR% 우선순위가 반영된 최근 7일 종목 스크리닝과 브라우저 보유 관리",
     "updated": "2026-09-01"
-  },
-  {
-    "slug": "best5-trade-journal",
-    "title": "Best5 실제 체결 매매일지와 6개월 자연강도 보유",
-    "description": "동일종목 중복매수 규칙, 실제 수락 거래 100건, 최근 6개월 자연강도 매매 시 보유 종목",
-    "updated": "2026-08-31"
   },
   {
     "slug": "window-grid-robustness",
