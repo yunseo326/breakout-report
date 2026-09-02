@@ -24,6 +24,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "p1-p2-leading-indicators",
+    "title": "추세 채널 이탈, 진짜 엣지가 있을까",
+    "description": "룩어헤드 제거 후 8개 선행지표 조건부 분석 — 실제 사례 4개 + P1 기준선 + P2/P3 결과",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "feature-combinations",
     "title": "선행지표 결합, 표본 밖에서도 통할까",
     "description": "RMSE 채널 이탈에 RSI·일목·계절성·수평 S/R·피보나치·실적거리 2·3지표를 결합한 2023~2026 표본 밖 검증",
@@ -100,12 +106,6 @@
     "title": "이탈 이벤트 실전 백테스트 수익률",
     "description": "채널/볼린저 이탈 신호에 진입지연·손절·트레일링스톱을 반영한 트레이드·포트폴리오 백테스트 결과",
     "updated": "2026-09-02"
-  },
-  {
-    "slug": "p1-p2-leading-indicators",
-    "title": "추세 채널 이탈, 진짜 엣지가 있을까",
-    "description": "룩어헤드 제거 후 8개 선행지표 조건부 분석 — 실제 사례 4개 + P1 기준선 + P2/P3 결과",
-    "updated": "2026-08-26"
   },
   {
     "slug": "sp500-screener",
