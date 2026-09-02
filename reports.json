@@ -1,5 +1,11 @@
 [
   {
+    "slug": "best5-daily-dashboard",
+    "title": "Best5 일일 매매 대시보드",
+    "description": "ATR 기반 선택, 손절·목표 퍼센트, 목표 도달률, 청산 잔여시간과 전략 고정 정렬을 반영한 일일 대시보드",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "s8-return-model",
     "title": "S8 승률·수익률 모델 비교",
     "description": "라벨을 승률·수익률로 바꿔 목표가 모델과 재비교 — 방향은 정상화됐지만 여전히 ATR%순을 못 넘음",
@@ -27,12 +33,6 @@
     "slug": "best5-journal-analysis",
     "title": "Best5 매매일지 사후분석",
     "description": "5개 전략 매매일지 6,646건과 후보신호 71만건 재검증 + 손절 실험 + 거래량 필터 룩어헤드 정정",
-    "updated": "2026-09-01"
-  },
-  {
-    "slug": "best5-daily-dashboard",
-    "title": "Best5 일일 매매 대시보드",
-    "description": "ATR 기반 선택, 손절·목표 퍼센트, 목표 도달률을 반영한 일일 대시보드 (TKFIB 제외, 4개 전략 운용)",
     "updated": "2026-09-01"
   },
   {
