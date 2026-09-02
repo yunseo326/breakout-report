@@ -4,89 +4,139 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>채널 창 길이, 결과가 바뀌나</title>
-<style>
-  :root {
-    --bg: #ffffff; --surface: #f6f7f9; --surface-2: #eef0f3; --border: #d8dce2;
-    --text: #16191d; --muted: #5b636e; --accent: #1f6feb;
-    --up: #1a7f37; --up-bg: #e6f4ea;
-    --down: #c22b2b; --down-bg: #fbe9e9;
-    --warn-bg: #fff6e0; --warn-border: #e8d38a; --warn-text: #6b5405;
-    --pending-bg: #eef0f3; --pending-text: #5b636e;
+<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap'><style>
+:root{
+  color-scheme:light dark;
+  --bg:#eef1f6; --surface:#ffffff; --surface-2:#f5f7fb; --ink:#16213e; --mut:#5b6788; --line:#d9dee8;
+  --accent:#a8531c; --accent-ink:#7a3c14; --channel:#166e63; --breakout:#a8531c;
+  --pos:#1a7a4c; --neg:#b23b3b; --warn-bg:#fdf3df; --warn-line:#d9b667;
+  --note-bg:#f2f6ff; --note-line:#c7d6f5;
+  --serif:"Noto Serif KR",Georgia,serif; --sans:"Noto Sans KR",-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono","Noto Sans KR",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1320; --surface:#171d2c; --surface-2:#1c2335; --ink:#e8ecf6; --mut:#94a1c2; --line:#2a3348;
+    --accent:#e0904f; --accent-ink:#f0a86a; --channel:#4fb6a6; --breakout:#e0904f;
+    --pos:#52d38b; --neg:#f5807f; --warn-bg:#2a2412; --warn-line:#5c4a1d;
+    --note-bg:#182238; --note-line:#2d4470;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f1216; --surface: #171b21; --surface-2: #1d232b; --border: #2b3138;
-      --text: #e6e9ee; --muted: #9aa4b1; --accent: #58a6ff;
-      --up: #4fce76; --up-bg: #123320;
-      --down: #ff6b6b; --down-bg: #3a1616;
-      --warn-bg: #2a230d; --warn-border: #5c4a12; --warn-text: #e0c264;
-      --pending-bg: #1d232b; --pending-text: #9aa4b1;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 3rem 1.25rem 5rem;
-    background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
-    line-height: 1.65;
-  }
-  .wrap { max-width: 860px; margin: 0 auto; }
-  a { color: var(--accent); }
-  .back { font-size: .88rem; color: var(--muted); text-decoration: none; }
-  .back:hover { color: var(--accent); }
-  header { margin: 1.25rem 0 2.5rem; }
-  header h1 { margin: .6rem 0 .4rem; font-size: 1.85rem; letter-spacing: -.01em; }
-  header p.sub { margin: 0; color: var(--muted); font-size: 1.02rem; }
-  header .meta { margin-top: .6rem; font-size: .82rem; color: var(--muted); }
-  h2 { font-size: 1.28rem; margin: 2.6rem 0 1rem; padding-top: .3rem; border-top: 1px solid var(--border); }
-  h2:first-of-type { border-top: none; padding-top: 0; }
-  h3 { font-size: 1.02rem; margin: 1.6rem 0 .7rem; color: var(--text); }
-  p { margin: .7rem 0; }
-  .note { font-size: .88rem; color: var(--muted); }
-  .callout {
-    background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text);
-    border-radius: 10px; padding: .9rem 1.1rem; font-size: .9rem; margin: 1.2rem 0;
-  }
-  .status-row { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 1.6rem; }
-  .pill {
-    font-size: .8rem; padding: .3rem .7rem; border-radius: 999px; border: 1px solid var(--border);
-    background: var(--surface); white-space: nowrap;
-  }
-  .pill.done { border-color: var(--up); color: var(--up); }
-  .pill.pending { background: var(--pending-bg); color: var(--pending-text); border-style: dashed; }
-  .table-scroll { overflow-x: auto; margin: 1rem 0 1.4rem; }
-  table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: .88rem; }
-  caption { caption-side: top; text-align: left; font-size: .84rem; color: var(--muted); margin-bottom: .4rem; }
-  th, td { padding: .5rem .6rem; border-bottom: 1px solid var(--border); text-align: right; }
-  th:first-child, td:first-child { text-align: left; }
-  th { color: var(--muted); font-weight: 600; font-size: .8rem; }
-  tbody tr:hover { background: var(--surface); }
-  td.up { color: var(--up); }
-  td.down { color: var(--down); }
-  .bar-cell { display: flex; align-items: center; gap: .5rem; }
-  .bar-track { flex: 1; height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; }
-  .bar-fill.down { background: var(--down); }
-  .bar-fill.up { background: var(--up); }
-  .stat-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .8rem; margin: 1.2rem 0; }
-  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; }
-  .tile .label { font-size: .78rem; color: var(--muted); }
-  .tile .value { font-size: 1.3rem; font-weight: 600; margin-top: .2rem; }
-  .tile .value.down { color: var(--down); }
-  .tile .value.up { color: var(--up); }
-  footer { margin-top: 3.5rem; font-size: .82rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1.2rem; }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1320; --surface:#171d2c; --surface-2:#1c2335; --ink:#e8ecf6; --mut:#94a1c2; --line:#2a3348;
+  --accent:#e0904f; --accent-ink:#f0a86a; --channel:#4fb6a6; --breakout:#e0904f;
+  --pos:#52d38b; --neg:#f5807f; --warn-bg:#2a2412; --warn-line:#5c4a1d;
+  --note-bg:#182238; --note-line:#2d4470;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+.page{max-width:1320px;margin:0 auto;padding:36px 20px 100px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:44px}
+@media (max-width:980px){.page{grid-template-columns:1fr}}
+.page.narrow{display:block;max-width:1180px}
+.toc{position:sticky;top:24px;align-self:start;font-size:12.5px;display:flex;flex-direction:column;gap:2px}
+@media (max-width:980px){.toc{position:static;flex-direction:row;overflow-x:auto;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:8px}}
+.toc a{color:var(--mut);text-decoration:none;padding:6px 8px;border-radius:6px;white-space:nowrap;border-left:2px solid transparent}
+.toc a:hover{color:var(--ink);background:var(--surface)}
+@media (min-width:981px){.toc a{border-left:2px solid var(--line)}}
+main{min-width:0}
+nav.top{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;font-size:12.5px}
+nav.top a{color:var(--mut);text-decoration:none;padding:6px 10px;border-radius:7px;border:1px solid transparent}
+nav.top a:hover{color:var(--ink);background:var(--surface);border-color:var(--line)}
+.eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+h1{font:700 30px/1.25 var(--serif);letter-spacing:-.01em;margin:10px 0 8px;text-wrap:balance}
+.dek{color:var(--mut);max-width:66ch;margin:0 0 22px}
+.statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.stat{background:var(--surface);padding:14px 16px}
+.stat b{display:block;font:600 20px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--mut)}
+h2{font:700 21px/1.3 var(--serif);margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--line);scroll-margin-top:20px}
+h2 small{font:400 13px var(--sans);color:var(--mut);margin-left:6px}
+h3{font:600 14.5px/1.4 var(--sans);margin:26px 0 10px;color:var(--mut);display:flex;align-items:center;gap:8px}
+p{margin:10px 0;max-width:74ch}
+.mut{color:var(--mut)}
+.hero-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px 18px;margin-bottom:6px}
+.findings{display:flex;flex-direction:column;gap:10px;margin:18px 0}
+.key{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:14px 16px 14px 52px;position:relative}
+.key .n{position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font:600 12.5px var(--mono);color:var(--accent-ink)}
+.key b{display:block;font:600 14.5px/1.4 var(--sans);margin-bottom:3px}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:11px;padding:14px 18px;margin:14px 0}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:11px;padding:14px 18px;margin:14px 0}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--surface);margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:12.5px;white-space:nowrap}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:right}
+th{background:var(--surface-2);position:sticky;top:0;font:600 11.5px var(--sans);color:var(--mut);
+  text-transform:uppercase;letter-spacing:.03em}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+td.num,td.labelcell{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px}
+td:first-child,td:nth-child(2){font-family:var(--sans)}
+td.num.pos{color:var(--pos)}
+td.num.neg{color:var(--neg)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;flex:none}
+.dot.breakout{background:var(--breakout)}
+.dot.channel{background:var(--channel)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--mut);margin:2px 0 16px}
+.legend span{display:flex;align-items:center}
+ul{margin:10px 0 10px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+li{padding-left:18px;position:relative;max-width:74ch}
+li::before{content:"–";position:absolute;left:0;color:var(--mut)}
+code{background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font:12px var(--mono)}
+footer{margin-top:50px;padding-top:16px;border-top:1px solid var(--line);color:var(--mut);font-size:12px}
+.price-pct{color:var(--mut);font-size:11px}
+.dup{display:inline-block;background:var(--surface-2);color:var(--accent-ink);border:1px solid var(--line);
+  border-radius:999px;padding:1px 7px;font-size:10px;font-weight:600;margin-left:5px}
+.sort-col button{border:0;background:transparent;padding:0;color:inherit;font:inherit;font-weight:600;cursor:pointer}
+.sort-col button:hover,.sort-col button:focus{color:var(--accent-ink)}
+.sort-col span{display:inline-block;min-width:12px;color:var(--mut)}
+details.guide{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:10px 18px;margin:14px 0}
+details.guide summary{cursor:pointer;font-weight:600;color:var(--mut);padding:4px 0}
+details.guide p{font-size:13px}
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pos);margin-right:6px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--pos) 22%,transparent)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:14px 0 8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  display:flex;flex-direction:column;height:100%;text-decoration:none;color:inherit;
+  transition:border-color .15s ease,transform .15s ease}
+.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card h3{margin:0 0 6px;color:var(--accent-ink);font:600 14.5px/1.4 var(--sans)}
+.card p{margin:0 0 10px;font-size:12.5px;color:var(--ink);max-width:none}
+.card .meta{margin-top:auto;font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
+  text-decoration:none;padding:9px 16px;border-radius:8px;font:600 13px var(--sans);white-space:nowrap}
+.btn:hover{background:var(--accent-ink)}
+
+.pill{font-size:.8rem;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.pill.done{border-color:var(--pos);color:var(--pos)}
+.pill.pending{background:var(--surface-2);color:var(--mut);border-style:dashed}
+.status-row{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 1.6rem}
+caption{caption-side:top;text-align:left;font-size:.84rem;color:var(--mut);margin-bottom:.4rem}
+td.up,span.up{color:var(--pos)}
+td.down,span.down{color:var(--neg)}
+.bar-cell{display:flex;align-items:center;gap:.5rem}
+.bar-track{flex:1;height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.bar-fill.down{background:var(--neg)}
+.bar-fill.up{background:var(--pos)}
+.stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin:1.2rem 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
+.tile .label{font-size:.78rem;color:var(--mut)}
+.tile .value{font-size:1.3rem;font-weight:600;margin-top:.2rem;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile .value.down{color:var(--neg)}
+.tile .value.up{color:var(--pos)}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <a class="back" href="../index.html">← 리포트 목록</a>
-    <header>
-      <h1>채널 창 길이, 결과가 바뀌나</h1>
-      <p class="sub">1/3/5/7년 롤링 채널 × 1/3/6개월 재적합 그리드로 P1 기준선의 강건성을 검증한다</p>
-      <p class="meta">갱신 2026-08-29 · <a href="p1-p2-leading-indicators.html">이전 리포트: 추세 채널 이탈, 진짜 엣지가 있을까</a>의 후속</p>
-    </header>
+  <div class="page narrow"><main>
+    <nav class="top"><a href="../index.html">리포트 목록</a></nav>
+    <span class="eyebrow">Window Grid Robustness</span>
+    <h1>채널 창 길이, 결과가 바뀌나</h1>
+    <p class="dek">1/3/5/7년 롤링 채널 × 1/3/6개월 재적합 그리드로 P1 기준선의 강건성을 검증한다</p>
+    <p class="mut">갱신 2026-08-29 · <a href="p1-p2-leading-indicators.html">이전 리포트: 추세 채널 이탈, 진짜 엣지가 있을까</a>의 후속</p>
 
-    <div class="callout">
+    <div class="note">
       <strong>계획한 9개 조합을 모두 완료했다.</strong> 마지막 7년×1개월 조합까지 포함해
       모든 설정에서 효과의 방향과 통계적 유의성이 유지됐다. 아래는 9/9 최종 결과다.
     </div>
@@ -112,7 +162,7 @@
       기반이 흔들린다. 그래서 창 길이(1/3/5/7년)와 재적합 주기(1/3/6개월)를 바꿔가며 같은 정의
       (방향맞춤 60봉 전방수익률, 부트스트랩 95% CI)로 다시 계산해 결론이 유지되는지 본다.
     </p>
-    <p class="note">
+    <p class="mut">
       모든 수치는 <code>fit_mode=rolling</code>(룩어헤드 없음), <code>source=channel</code> 이벤트만
       쓴다. 표본 수는 창이 길수록 줄어드는데(워밍업 구간이 길어져 이벤트가 나올 수 있는 기간이
       짧아짐, 그리고 상장 이력이 짧은 일부 종목이 탈락), 1년 창 500종목·140,254건 → 7년 창
@@ -125,7 +175,7 @@
       전체 평균이다. 음수는 below(반전 성향)가 above(지속 성향)보다 강해서 전체가 음수 쪽으로
       끌려간다는 뜻 — P1과 같은 해석.
     </p>
-    <div class="table-scroll">
+    <div class="scroll">
     <table>
       <caption>방향맞춤 60봉 전방수익률 평균 (%, 95% 부트스트랩 CI)</caption>
       <thead>
@@ -142,7 +192,7 @@
       below의 값이 음수라는 건 "하단 이탈이 계속 하락으로 이어지지 않고 되돌림(반등)이 더 우세"라는
       뜻 — P2에서 본 "below가 더 강한 반전 성향"과 같은 현상.
     </p>
-    <div class="table-scroll">
+    <div class="scroll">
     <table>
       <caption>above/below 분리 (방향맞춤 60봉 전방수익률 평균 %, 승률)</caption>
       <thead>
@@ -178,7 +228,7 @@
     <p>
       같은 계산을 <strong>7년 창 × 6개월 재적합</strong>으로 바꾸면 어떻게 될까:
     </p>
-    <div class="table-scroll">
+    <div class="scroll">
     <table>
       <caption>같은 below 이벤트, 창·재적합 설정만 다르게</caption>
       <thead>
@@ -205,7 +255,7 @@
       뒤집히지 않는다. RMSE×2.0 배수가 창이 길어질수록(3→5년) 더 강해졌다가 7년에서 살짝
       약해지는 정도의 변화만 있다.
     </p>
-    <div class="table-scroll">
+    <div class="scroll">
     <table>
       <caption>채널 × 배수별 (재적합 6개월, 완료된 3/5/7년 창)</caption>
       <thead>
@@ -236,18 +286,18 @@
       우연히 골라서 나온 착시"가 아니라, 더 긴 창에서도 방향과 크기가 크게 다르지 않은
       기반 위에 서 있다고 볼 근거가 생겼다.
     </p>
-    <p class="note">
+    <p class="mut">
       1개월 재적합은 1/3/5/7년 전부, 3개월·6개월 재적합은 계획된 3/5/7년 전부
       완료했다. 마지막 7년×1개월도 평균 −1.14%, 95% CI [−1.24, −1.05]로 기존
       범위 안에 들어와 빈 조합 없이 창 길이와 재적합 주기 양쪽 강건성을 확인했다.
     </p>
 
-    <footer>
+    <footer class="mut">
       연구용 자료입니다. 투자 조언이 아닙니다. 과거 성과가 미래 수익을 보장하지 않습니다.
       계산 코드: <code>analyze_window_grid.py</code>, 이벤트 빌드: <code>build_events.py
       --window-years --refit-months</code>, <code>run_window_grid.py</code>.
     </footer>
-  </div>
+  </main></div>
 
 <script>
 const GRID = [
@@ -325,7 +375,7 @@ function fillGrid() {
       <td>${r.n.toLocaleString()}</td>
       <td>${r.tickers}</td>
       <td class="${signClass(r.mean)}">${fmtPct(r.mean)}</td>
-      <td class="note">[${r.lo.toFixed(2)}, ${r.hi.toFixed(2)}]</td>
+      <td class="mut">[${r.lo.toFixed(2)}, ${r.hi.toFixed(2)}]</td>
       <td>${r.rev.toFixed(1)}%</td>
       <td style="min-width:120px">${barCell(r.mean, maxAbs)}</td>
     </tr>
@@ -333,7 +383,7 @@ function fillGrid() {
     <tr>
       <td>${p.w}년</td>
       <td>${p.r}개월</td>
-      <td colspan="5" class="note">미실행(중단) — 나머지 8개 조합으로 결론 충분하다고 판단</td>
+      <td colspan="5" class="mut">미실행(중단) — 나머지 8개 조합으로 결론 충분하다고 판단</td>
       <td></td>
     </tr>
   `).join('');
@@ -349,7 +399,7 @@ function fillSide() {
       <td>${r.side}</td>
       <td>${r.n.toLocaleString()}</td>
       <td class="${signClass(r.mean)}">${fmtPct(r.mean)}</td>
-      <td class="note">[${r.lo.toFixed(2)}, ${r.hi.toFixed(2)}]</td>
+      <td class="mut">[${r.lo.toFixed(2)}, ${r.hi.toFixed(2)}]</td>
       <td>${r.win.toFixed(1)}%</td>
     </tr>
   `).join('');
@@ -365,7 +415,7 @@ function fillChannel() {
       <td>${r.mult.toFixed(1)}</td>
       <td>${r.n.toLocaleString()}</td>
       <td class="${signClass(r.mean)}">${fmtPct(r.mean)}</td>
-      <td class="note">[${r.lo.toFixed(2)}, ${r.hi.toFixed(2)}]</td>
+      <td class="mut">[${r.lo.toFixed(2)}, ${r.hi.toFixed(2)}]</td>
       <td>${r.rev.toFixed(1)}%</td>
     </tr>
   `).join('');
