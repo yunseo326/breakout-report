@@ -6,6 +6,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "sp500-screener",
+    "title": "SP500 추세 채널 스크리너",
+    "description": "RANSAC 로그채널 스크리닝 500종목 + 인터랙티브 차트 + RMSE/ATR 이탈 순위",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "s8-return-model",
     "title": "S8 승률·수익률 모델 비교",
     "description": "라벨을 승률·수익률로 바꿔 목표가 모델과 재비교 — 방향은 정상화됐지만 여전히 ATR%순을 못 넘음",
@@ -106,11 +112,5 @@
     "title": "이탈 이벤트 실전 백테스트 수익률",
     "description": "채널/볼린저 이탈 신호에 진입지연·손절·트레일링스톱을 반영한 트레이드·포트폴리오 백테스트 결과",
     "updated": "2026-09-02"
-  },
-  {
-    "slug": "sp500-screener",
-    "title": "SP500 추세 채널 스크리너",
-    "description": "RANSAC 로그채널 스크리닝 500종목 + 인터랙티브 차트 + RMSE/ATR 이탈 순위",
-    "updated": "2026-08-25"
   }
 ]
