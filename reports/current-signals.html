@@ -4,36 +4,42 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>지금 채널을 벗어난 종목</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
   :root {
-    --bg: #ffffff; --surface: #f6f7f9; --surface-2: #eef0f3; --border: #d8dce2;
-    --text: #16191d; --muted: #5b636e; --accent: #1f6feb;
-    --up: #1a7f37; --up-bg: #e6f4ea;
-    --down: #c22b2b; --down-bg: #fbe9e9;
-    --warn-bg: #fff6e0; --warn-border: #e8d38a; --warn-text: #6b5405;
+    --bg: #eef1f6; --surface: #ffffff; --surface-2: #f5f7fb; --border: #d9dee8;
+    --text: #16213e; --muted: #5b6788; --accent: #a8531c; --accent-ink: #7a3c14;
+    --up: #1a7a4c; --up-bg: #e6f4ea;
+    --down: #b23b3b; --down-bg: #fbe9e9;
+    --warn-bg: #fdf3df; --warn-border: #d9b667; --warn-text: #7a3c14;
+    --serif: "Noto Serif KR", Georgia, serif; --sans: "Noto Sans KR", -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", "Noto Sans KR", monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0f1216; --surface: #171b21; --surface-2: #1d232b; --border: #2b3138;
-      --text: #e6e9ee; --muted: #9aa4b1; --accent: #58a6ff;
-      --up: #4fce76; --up-bg: #123320;
-      --down: #ff6b6b; --down-bg: #3a1616;
-      --warn-bg: #2a230d; --warn-border: #5c4a12; --warn-text: #e0c264;
+      --bg: #0e1320; --surface: #171d2c; --surface-2: #1c2335; --border: #2a3348;
+      --text: #e8ecf6; --muted: #94a1c2; --accent: #e0904f; --accent-ink: #f0a86a;
+      --up: #52d38b; --up-bg: #123320;
+      --down: #f5807f; --down-bg: #3a1616;
+      --warn-bg: #2a2412; --warn-border: #5c4a1d; --warn-text: #f0a86a;
     }
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 3rem 1.25rem 5rem;
     background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
+    font-family: var(--sans);
     line-height: 1.65;
   }
   .wrap { max-width: 1040px; margin: 0 auto; }
-  a { color: var(--accent); }
+  a { color: var(--accent-ink); }
+  .eyebrow { font: 600 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); }
   .back { font-size: .88rem; color: var(--muted); text-decoration: none; }
-  .back:hover { color: var(--accent); }
-  header { margin: 1.25rem 0 2.5rem; }
-  header h1 { margin: .6rem 0 .4rem; font-size: 1.85rem; letter-spacing: -.01em; }
+  .back:hover { color: var(--accent-ink); }
+  header { margin: 1rem 0 2.5rem; }
+  header h1 { margin: .5rem 0 .4rem; font: 700 1.85rem/1.25 var(--serif); letter-spacing: -.01em; }
   header p.sub { margin: 0; color: var(--muted); font-size: 1.02rem; }
   header .meta { margin-top: .6rem; font-size: .82rem; color: var(--muted); }
   h2 { font-size: 1.1rem; margin: 0 0 .3rem; }
@@ -46,7 +52,7 @@
   .stat-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .8rem; margin: 1.2rem 0; }
   .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; }
   .tile .label { font-size: .78rem; color: var(--muted); }
-  .tile .value { font-size: 1.3rem; font-weight: 600; margin-top: .2rem; }
+  .tile .value { font: 600 1.3rem/1.2 var(--mono); margin-top: .2rem; font-variant-numeric: tabular-nums; }
   .tile .value.down { color: var(--down); }
   .tile .value.up { color: var(--up); }
 
@@ -113,6 +119,7 @@
   <div class="wrap">
     <a class="back" href="../index.html">← 리포트 목록</a>
     <header>
+      <div class="eyebrow">Current Signals</div>
       <h1>지금 채널을 벗어난 종목</h1>
       <p class="sub">RANSAC 로그채널(1년창 / 1개월마다 재적합)을 SP500 500종목에 다시 적합시켜, 가장 최근 거래일 기준으로 채널을 벗어난 종목만 모았다</p>
       <p class="meta">기준일 2026-08-27 · <a href="window-grid-robustness.html">엣지 검증 리포트</a> 및 <a href="p1-p2-leading-indicators.html">선행지표 리포트</a>의 실전 적용 화면</p>
