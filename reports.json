@@ -99,7 +99,7 @@
     "slug": "backtest-returns",
     "title": "이탈 이벤트 실전 백테스트 수익률",
     "description": "채널/볼린저 이탈 신호에 진입지연·손절·트레일링스톱을 반영한 트레이드·포트폴리오 백테스트 결과",
-    "updated": "2026-08-28"
+    "updated": "2026-09-02"
   },
   {
     "slug": "p1-p2-leading-indicators",

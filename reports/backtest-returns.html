@@ -4,78 +4,132 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>이탈 이벤트, 실제로 베팅하면 얼마나 벌었을까</title>
-<style>
-  :root {
-    --bg: #ffffff; --surface: #f6f7f9; --surface-2: #eef0f3; --border: #d8dce2;
-    --text: #16191d; --muted: #5b636e; --accent: #1f6feb;
-    --up: #1a7f37; --up-bg: #e6f4ea;
-    --down: #c22b2b; --down-bg: #fbe9e9;
-    --warn-bg: #fff6e0; --warn-border: #e8d38a; --warn-text: #6b5405;
+<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap'><style>
+:root{
+  color-scheme:light dark;
+  --bg:#eef1f6; --surface:#ffffff; --surface-2:#f5f7fb; --ink:#16213e; --mut:#5b6788; --line:#d9dee8;
+  --accent:#a8531c; --accent-ink:#7a3c14; --channel:#166e63; --breakout:#a8531c;
+  --pos:#1a7a4c; --neg:#b23b3b; --warn-bg:#fdf3df; --warn-line:#d9b667;
+  --note-bg:#f2f6ff; --note-line:#c7d6f5;
+  --serif:"Noto Serif KR",Georgia,serif; --sans:"Noto Sans KR",-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono","Noto Sans KR",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1320; --surface:#171d2c; --surface-2:#1c2335; --ink:#e8ecf6; --mut:#94a1c2; --line:#2a3348;
+    --accent:#e0904f; --accent-ink:#f0a86a; --channel:#4fb6a6; --breakout:#e0904f;
+    --pos:#52d38b; --neg:#f5807f; --warn-bg:#2a2412; --warn-line:#5c4a1d;
+    --note-bg:#182238; --note-line:#2d4470;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f1216; --surface: #171b21; --surface-2: #1d232b; --border: #2b3138;
-      --text: #e6e9ee; --muted: #9aa4b1; --accent: #58a6ff;
-      --up: #4fce76; --up-bg: #123320;
-      --down: #ff6b6b; --down-bg: #3a1616;
-      --warn-bg: #2a230d; --warn-border: #5c4a12; --warn-text: #e0c264;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 3rem 1.25rem 5rem;
-    background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
-    line-height: 1.65;
-  }
-  .wrap { max-width: 900px; margin: 0 auto; }
-  a { color: var(--accent); }
-  .back { font-size: .88rem; color: var(--muted); text-decoration: none; }
-  .back:hover { color: var(--accent); }
-  header { margin: 1.25rem 0 2.5rem; }
-  header h1 { margin: .6rem 0 .4rem; font-size: 1.85rem; letter-spacing: -.01em; }
-  header p.sub { margin: 0; color: var(--muted); font-size: 1.02rem; }
-  header .meta { margin-top: .6rem; font-size: .82rem; color: var(--muted); }
-  h2 { font-size: 1.28rem; margin: 2.6rem 0 1rem; padding-top: .3rem; border-top: 1px solid var(--border); }
-  h2:first-of-type { border-top: none; padding-top: 0; }
-  h3 { font-size: 1.05rem; margin: 1.8rem 0 .7rem; color: var(--text); }
-  p { margin: .7rem 0; }
-  .note { font-size: .88rem; color: var(--muted); }
-  .callout {
-    background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text);
-    border-radius: 10px; padding: .9rem 1.1rem; font-size: .9rem; margin: 1.2rem 0;
-  }
-  .table-scroll { overflow-x: auto; margin: 1rem 0 1.4rem; }
-  table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .87rem; }
-  caption { caption-side: top; text-align: left; font-size: .84rem; color: var(--muted); margin-bottom: .4rem; }
-  th, td { padding: .5rem .6rem; border-bottom: 1px solid var(--border); text-align: right; }
-  th:first-child, td:first-child { text-align: left; }
-  th:nth-child(2), td:nth-child(2) { text-align: left; }
-  th { color: var(--muted); font-weight: 600; font-size: .8rem; }
-  tbody tr:hover { background: var(--surface); }
-  tbody tr.best { background: var(--up-bg); }
-  td.up { color: var(--up); }
-  td.down { color: var(--down); }
-  .stat-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .8rem; margin: 1.2rem 0; }
-  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; }
-  .tile .label { font-size: .78rem; color: var(--muted); }
-  .tile .value { font-size: 1.3rem; font-weight: 600; margin-top: .2rem; }
-  .tile .value.down { color: var(--down); }
-  .tile .value.up { color: var(--up); }
-  .tag { display: inline-block; font-size: .74rem; padding: .12rem .5rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); margin-left: .4rem; }
-  footer { margin-top: 3.5rem; font-size: .82rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1.2rem; }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1320; --surface:#171d2c; --surface-2:#1c2335; --ink:#e8ecf6; --mut:#94a1c2; --line:#2a3348;
+  --accent:#e0904f; --accent-ink:#f0a86a; --channel:#4fb6a6; --breakout:#e0904f;
+  --pos:#52d38b; --neg:#f5807f; --warn-bg:#2a2412; --warn-line:#5c4a1d;
+  --note-bg:#182238; --note-line:#2d4470;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+.page{max-width:1320px;margin:0 auto;padding:36px 20px 100px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:44px}
+@media (max-width:980px){.page{grid-template-columns:1fr}}
+.page.narrow{display:block;max-width:1180px}
+.toc{position:sticky;top:24px;align-self:start;font-size:12.5px;display:flex;flex-direction:column;gap:2px}
+@media (max-width:980px){.toc{position:static;flex-direction:row;overflow-x:auto;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:8px}}
+.toc a{color:var(--mut);text-decoration:none;padding:6px 8px;border-radius:6px;white-space:nowrap;border-left:2px solid transparent}
+.toc a:hover{color:var(--ink);background:var(--surface)}
+@media (min-width:981px){.toc a{border-left:2px solid var(--line)}}
+main{min-width:0}
+nav.top{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;font-size:12.5px}
+nav.top a{color:var(--mut);text-decoration:none;padding:6px 10px;border-radius:7px;border:1px solid transparent}
+nav.top a:hover{color:var(--ink);background:var(--surface);border-color:var(--line)}
+.eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+h1{font:700 30px/1.25 var(--serif);letter-spacing:-.01em;margin:10px 0 8px;text-wrap:balance}
+.dek{color:var(--mut);max-width:66ch;margin:0 0 22px}
+.statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.stat{background:var(--surface);padding:14px 16px}
+.stat b{display:block;font:600 20px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--mut)}
+h2{font:700 21px/1.3 var(--serif);margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--line);scroll-margin-top:20px}
+h2 small{font:400 13px var(--sans);color:var(--mut);margin-left:6px}
+h3{font:600 14.5px/1.4 var(--sans);margin:26px 0 10px;color:var(--mut);display:flex;align-items:center;gap:8px}
+p{margin:10px 0;max-width:74ch}
+.mut{color:var(--mut)}
+.hero-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px 18px;margin-bottom:6px}
+.findings{display:flex;flex-direction:column;gap:10px;margin:18px 0}
+.key{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:14px 16px 14px 52px;position:relative}
+.key .n{position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font:600 12.5px var(--mono);color:var(--accent-ink)}
+.key b{display:block;font:600 14.5px/1.4 var(--sans);margin-bottom:3px}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:11px;padding:14px 18px;margin:14px 0}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:11px;padding:14px 18px;margin:14px 0}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--surface);margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:12.5px;white-space:nowrap}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:right}
+th{background:var(--surface-2);position:sticky;top:0;font:600 11.5px var(--sans);color:var(--mut);
+  text-transform:uppercase;letter-spacing:.03em}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+td.num,td.labelcell{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px}
+td:first-child,td:nth-child(2){font-family:var(--sans)}
+td.num.pos{color:var(--pos)}
+td.num.neg{color:var(--neg)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;flex:none}
+.dot.breakout{background:var(--breakout)}
+.dot.channel{background:var(--channel)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--mut);margin:2px 0 16px}
+.legend span{display:flex;align-items:center}
+ul{margin:10px 0 10px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+li{padding-left:18px;position:relative;max-width:74ch}
+li::before{content:"–";position:absolute;left:0;color:var(--mut)}
+code{background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font:12px var(--mono)}
+footer{margin-top:50px;padding-top:16px;border-top:1px solid var(--line);color:var(--mut);font-size:12px}
+.price-pct{color:var(--mut);font-size:11px}
+.dup{display:inline-block;background:var(--surface-2);color:var(--accent-ink);border:1px solid var(--line);
+  border-radius:999px;padding:1px 7px;font-size:10px;font-weight:600;margin-left:5px}
+.sort-col button{border:0;background:transparent;padding:0;color:inherit;font:inherit;font-weight:600;cursor:pointer}
+.sort-col button:hover,.sort-col button:focus{color:var(--accent-ink)}
+.sort-col span{display:inline-block;min-width:12px;color:var(--mut)}
+details.guide{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:10px 18px;margin:14px 0}
+details.guide summary{cursor:pointer;font-weight:600;color:var(--mut);padding:4px 0}
+details.guide p{font-size:13px}
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pos);margin-right:6px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--pos) 22%,transparent)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:14px 0 8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  display:flex;flex-direction:column;height:100%;text-decoration:none;color:inherit;
+  transition:border-color .15s ease,transform .15s ease}
+.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card h3{margin:0 0 6px;color:var(--accent-ink);font:600 14.5px/1.4 var(--sans)}
+.card p{margin:0 0 10px;font-size:12.5px;color:var(--ink);max-width:none}
+.card .meta{margin-top:auto;font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
+  text-decoration:none;padding:9px 16px;border-radius:8px;font:600 13px var(--sans);white-space:nowrap}
+.btn:hover{background:var(--accent-ink)}
+
+caption{caption-side:top;text-align:left;font-size:.84rem;color:var(--mut);margin-bottom:.4rem}
+tr.best{background:var(--warn-bg)}
+td.up,span.up{color:var(--pos)}
+td.down,span.down{color:var(--neg)}
+.stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin:1.2rem 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
+.tile .label{font-size:.78rem;color:var(--mut)}
+.tile .value{font-size:1.3rem;font-weight:600;margin-top:.2rem;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile .value.down{color:var(--neg)}
+.tile .value.up{color:var(--pos)}
+.tag{display:inline-block;font-size:.74rem;padding:.12rem .5rem;border-radius:999px;border:1px solid var(--line);color:var(--mut);margin-left:.4rem}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <a class="back" href="../index.html">← 리포트 목록</a>
-    <header>
-      <h1>이탈 이벤트, 실제로 베팅하면 얼마나 벌었을까</h1>
-      <p class="sub">채널 이탈/복귀 신호에 실제 체결 규칙(진입 지연·손절·스톱)을 반영한 트레이드/포트폴리오 백테스트</p>
-      <p class="meta">갱신 2026-08-28 · <a href="p1-p2-leading-indicators.html">P1/P2/P3</a>·<a href="window-grid-robustness.html">강건성 검증</a>의 후속 — 이번엔 "실제로 돈을 걸었으면"을 계산한다</p>
-    </header>
+  <div class="page narrow"><main>
+    <nav class="top"><a href="../index.html">리포트 목록</a></nav>
+    <span class="eyebrow">Backtest Returns</span>
+    <h1>이탈 이벤트, 실제로 베팅하면 얼마나 벌었을까</h1>
+    <p class="dek">채널 이탈/복귀 신호에 실제 체결 규칙(진입 지연·손절·스톱)을 반영한 트레이드/포트폴리오 백테스트</p>
+    <p class="mut">갱신 2026-08-28 · <a href="p1-p2-leading-indicators.html">P1/P2/P3</a>·<a href="window-grid-robustness.html">강건성 검증</a>의 후속 — 이번엔 "실제로 돈을 걸었으면"을 계산한다</p>
 
-    <div class="callout">
+    <div class="note">
       앞선 리포트들의 수치(방향맞춤 60봉 전방수익률)는 진입 지연·손절·거래비용이 전혀 없는
       순수 통계였다. 이 리포트는 <strong>다음 거래일 시가 진입</strong> 같은 실제 체결 규칙과
       청산 로직(복귀청산/트레일링 스톱/손절/익절)을 반영해 <strong>트레이드 단위 수익률</strong>과
@@ -93,14 +147,14 @@
         <tr><td>channel_bollinger_and</td><td>channel 이탈일에 같은 종목의 볼린저 밴드도 같은 방향으로 벗어나 있어야 채택하는 AND 결합 필터</td></tr>
       </tbody>
     </table>
-    <p class="note">모든 전략 공통: 신호 다음 거래일 시가 진입, 롱온리, 거래비용 0, 슬리피지 0. below=하단 이탈(반등 베팅), above=상단 이탈(지속 베팅).</p>
+    <p class="mut">모든 전략 공통: 신호 다음 거래일 시가 진입, 롱온리, 거래비용 0, 슬리피지 0. below=하단 이탈(반등 베팅), above=상단 이탈(지속 베팅).</p>
 
     <h2>1. 트레이드 단위 성과</h2>
     <p>
       개별 트레이드 하나하나를 독립적으로 봤을 때의 승률·평균/중앙값 수익률이다.
       below(반등 베팅)가 above(지속 베팅)보다 승률·평균수익 모두 전 전략에서 확연히 높다.
     </p>
-    <div class="table-scroll">
+    <div class="scroll">
     <table>
       <caption>트레이드 단위 (거래건수 n, 승률, 평균/중앙값 수익률 %, 평균 보유봉)</caption>
       <thead>
@@ -124,7 +178,7 @@
         <tr><td>C_uncapped_2pct</td><td>종목당 2% · 슬롯 무제한(자본 한도로만 제어)</td></tr>
       </tbody>
     </table>
-    <div class="table-scroll">
+    <div class="scroll">
     <table>
       <caption>포트폴리오 시뮬레이션 (배수, CAGR, MDD, 최대/평균 동시보유)</caption>
       <thead>
@@ -154,13 +208,13 @@
       최종 배수·CAGR이 오히려 낮아진다. 트레이드 퀄리티와 트레이드 빈도 사이의 트레이드오프다.
     </p>
 
-    <footer>
+    <footer class="mut">
       연구용 자료입니다. 투자 조언이 아닙니다. 과거 성과가 미래 수익을 보장하지 않으며,
       거래비용·슬리피지·세금이 전혀 반영되지 않은 gross 수치입니다.
       계산 코드: <code>backtest_channel_events.py</code>, <code>portfolio_backtest.py</code>,
       <code>events/bollinger.py</code>, <code>combine_channel_bollinger.py</code>.
     </footer>
-  </div>
+  </main></div>
 
 <script>
 const TRADE = [
