@@ -24,6 +24,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "current-best5-dashboard",
+    "title": "전체 실험 최대 CAGR Best5",
+    "description": "Best5 스크리닝, 실제 체결 매매일지, 6개월 자연강도 보유 종목 및 최근 추천 관리",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "comprehensive-report",
     "title": "추세 채널 연구 종합 보고서",
     "description": "Top5·78개 전략·5/10종목·장기 구간·무작위 검증을 포함한 전체 통합 비교",
@@ -69,12 +75,6 @@
     "slug": "research-archive",
     "title": "과거 연구 기록",
     "description": "기존 보고서 원본을 보존한 연구 아카이브",
-    "updated": "2026-08-31"
-  },
-  {
-    "slug": "current-best5-dashboard",
-    "title": "전체 실험 최대 CAGR Best5",
-    "description": "Best5 스크리닝, 실제 체결 매매일지, 6개월 자연강도 보유 종목 및 최근 추천 관리",
     "updated": "2026-08-31"
   },
   {
