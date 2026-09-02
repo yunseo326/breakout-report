@@ -12,6 +12,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "fair-strategy-ranking",
+    "title": "최대 CAGR 전체 78개 전략 순위",
+    "description": "각 전략의 최대 CAGR 조건 기준 순위, 검색·정렬·4조건 세부결과",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "best5-journal-analysis",
     "title": "Best5 매매일지 사후분석",
     "description": "5개 전략 매매일지 6,646건과 후보신호 71만건 재검증 + 손절 실험 + 거래량 필터 룩어헤드 정정",
@@ -45,12 +51,6 @@
     "slug": "research-archive",
     "title": "과거 연구 기록",
     "description": "기존 보고서 원본을 보존한 연구 아카이브",
-    "updated": "2026-08-31"
-  },
-  {
-    "slug": "fair-strategy-ranking",
-    "title": "최대 CAGR 전체 78개 전략 순위",
-    "description": "각 전략의 최대 CAGR 조건 기준 순위, 검색·정렬·4조건 세부결과",
     "updated": "2026-08-31"
   },
   {
