@@ -12,6 +12,12 @@
     "updated": "2026-09-02"
   },
   {
+    "slug": "research-archive",
+    "title": "과거 연구 기록",
+    "description": "기존 보고서 원본을 보존한 연구 아카이브",
+    "updated": "2026-09-02"
+  },
+  {
     "slug": "fair-strategy-ranking",
     "title": "최대 CAGR 전체 78개 전략 순위",
     "description": "각 전략의 최대 CAGR 조건 기준 순위, 검색·정렬·4조건 세부결과",
@@ -70,12 +76,6 @@
     "title": "Best5 ATR 종목 스크리닝·보유 관리",
     "description": "S8·S3 ATR% 우선순위가 반영된 최근 7일 종목 스크리닝과 브라우저 보유 관리",
     "updated": "2026-09-01"
-  },
-  {
-    "slug": "research-archive",
-    "title": "과거 연구 기록",
-    "description": "기존 보고서 원본을 보존한 연구 아카이브",
-    "updated": "2026-08-31"
   },
   {
     "slug": "best5-trade-journal",
