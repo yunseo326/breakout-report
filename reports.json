@@ -1,14 +1,14 @@
 [
   {
+    "slug": "best5-daily-dashboard",
+    "title": "Best5 일일 매매 대시보드",
+    "description": "ATR 기반 선택, 손절·목표 퍼센트, 목표 도달률, 청산 잔여시간과 전략 고정 정렬을 반영한 일일 대시보드",
+    "updated": "2026-09-04"
+  },
+  {
     "slug": "best5-recommendation-manager",
     "title": "Best5 최근 7일 추천·보유 관리",
     "description": "최신 완료 거래일 신호와 다음 거래일 시가 대기 후보를 진입가 미확정 상태로 표시하는 추천 관리 화면",
-    "updated": "2026-09-03"
-  },
-  {
-    "slug": "best5-daily-dashboard",
-    "title": "Best5 일일 매매 대시보드",
-    "description": "6개월 롤링 현재 보유, 다음 거래일 시가 대기 후보, 손절·목표와 청산 상태를 함께 관리하는 일일 대시보드",
     "updated": "2026-09-03"
   },
   {
