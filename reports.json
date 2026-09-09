@@ -1,5 +1,11 @@
 [
   {
+    "slug": "s8-reverse-design",
+    "title": "S8 역설계·상태청산·후보교체 연구",
+    "description": "현행 Best5 전략과 S8 목표가·보유기간, 후보 유지·교체, 상태청산의 연도별 확장형 OOS 비교",
+    "updated": "2026-09-09"
+  },
+  {
     "slug": "best5-recommendation-manager",
     "title": "Best5 최근 7일 추천·보유 관리",
     "description": "최신 완료 거래일 신호와 다음 거래일 시가 대기 후보를 진입가 미확정 상태로 표시하는 추천 관리 화면",
