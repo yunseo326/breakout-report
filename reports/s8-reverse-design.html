@@ -101,12 +101,17 @@ details.guide p{font-size:13px}
 .btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
   text-decoration:none;padding:9px 16px;border-radius:8px;font:600 13px var(--sans);white-space:nowrap}
 .btn:hover{background:var(--accent-ink)}
-.data{font-size:12px}.scroll{overflow:auto}.annual th:first-child,.annual td:first-child{position:sticky;left:0;background:var(--surface);font-weight:700}</style></head><body><main><span class="eyebrow">S8 · PURGED WALK-FORWARD RESEARCH</span><h1>S8 역설계·상태청산·후보교체 연구</h1><p class="dek">기준선은 ATR% 순·4R 목표·60거래일·무교체입니다. 당일 종가 상태청산은 이상적 상한선이며 실제 판단은 다음 거래일 시가 결과를 사용합니다.</p><div class="note"><b>판독 순서:</b> 전체기간 표는 가설 탐색용입니다. 핵심 판단은 2016–2026 확장형 OOS 표입니다. 각 시험연도 설정은 그 이전 연도만으로 고정했고, close_ideal은 참고 상한선으로만 남겼습니다. 연도 경계에서는 각 OOS 폴드를 현금 100%로 다시 시작해 일별 수익률을 연결했습니다.</div><h2>현재 Best5 매매일지에 쓰는 전략</h2><p>현재 일일 운용 대상은 아래 4개입니다. TKFIB는 2026-09-01 검증 후 제외됐습니다. 2026-09-02에 생성된 별도 정적 <code>best5-trade-journal.html</code>은 당시 5개 전략과 이전 우선순위를 보존한 과거 화면이며 현재 운용 정의가 아닙니다.</p><div class="scroll"><table class="data"><thead><tr><th>전략</th><th>현재 후보 우선순위</th><th>최대 보유</th><th>청산 구조</th></tr></thead><tbody>
-<tr><td>S8 변동성 돌파</td><td>당일 ATR% 내림차순 · 10종목</td><td>60거래일</td><td>2.5 ATR 또는 2.5% 손절 · 4R 목표</td></tr>
-<tr><td>RMSE×2 하단 기준선</td><td>이탈강도 순 · 거래량 급증 상위 10% 후순위 · 5종목</td><td>60거래일</td><td>고정손절 없음 · 채널 기준선 복귀</td></tr>
-<tr><td>S3 Darvas Box</td><td>당일 ATR% 내림차순 · 10종목</td><td>60거래일</td><td>ATR/박스 하단 손절 · 3R 목표</td></tr>
-<tr><td>S13 NR7</td><td>전일 고가 대비 돌파폭 순 · 10종목</td><td>60거래일</td><td>2.5 ATR 또는 2.5% 손절 · 2R 목표</td></tr>
-</tbody></table></div><h2>2016–2026 순수 OOS 누적 결과</h2><div class="scroll"><table class="dataframe data">
+.data{font-size:12px}.scroll{overflow:auto}.annual th:first-child,.annual td:first-child{position:sticky;left:0;background:var(--surface);font-weight:700}</style></head><body><main><span class="eyebrow">S8 · PURGED WALK-FORWARD RESEARCH</span><h1>S8 역설계·상태청산·후보교체 연구</h1><p class="dek">기준선은 ATR% 순·4R 목표·60거래일·무교체입니다. 당일 종가 상태청산은 이상적 상한선이며 실제 판단은 다음 거래일 시가 결과를 사용합니다.</p><div class="note"><b>판독 순서:</b> 전체기간 표는 가설 탐색용입니다. 핵심 판단은 2016–2026 확장형 OOS 표입니다. 각 시험연도 설정은 그 이전 연도만으로 고정했고, close_ideal은 참고 상한선으로만 남겼습니다. 연도 경계에서는 각 OOS 폴드를 현금 100%로 다시 시작해 일별 수익률을 연결했습니다.</div><h2>현재 Best5 매매일지의 S8 전략</h2><p>아래 규칙이 현재 일일 매매일지와 보유 대시보드에서 S8에 적용되는 기준입니다. ATR%는 신호 자체가 아니라 같은 날 발생한 S8 후보 사이의 종목 선정 순위에 사용합니다.</p><div class="scroll"><table class="data"><thead><tr><th>항목</th><th>현재 매매일지 적용 규칙</th></tr></thead><tbody>
+<tr><td>신호</td><td>Larry Williams 변동성 돌파: 당일 종가 &gt; 당일 시가 + 전일 변동폭(고가−저가)의 50%</td></tr>
+<tr><td>후보 선택</td><td>같은 진입일 신호를 14일 ATR% (= ATR/종가) 내림차순으로 정렬</td></tr>
+<tr><td>진입</td><td>신호 다음 거래일 시가 · 최대 10종목 · 종목당 당시 자산의 10%</td></tr>
+<tr><td>손절</td><td>신호일 종가 − max(2.5×ATR14, 신호일 종가의 2.5%)로 고정</td></tr>
+<tr><td>목표</td><td>실제 진입가 + 4×(실제 진입가−고정 손절가), 즉 4R</td></tr>
+<tr><td>기간</td><td>최대 60거래일, 만기일 종가 청산</td></tr>
+<tr><td>충돌</td><td>같은 날 손절과 목표가가 모두 닿으면 보수적으로 손절 우선</td></tr>
+<tr><td>후보 유지·교체</td><td>신호는 해당 진입일 하루만 유효 · 보유 10종목이 차면 이후 신호는 거절 · 기존 보유와 교체하지 않음</td></tr>
+<tr><td>중복</td><td>S8 안에서는 보유 중인 동일 티커 추가 진입 금지, 청산 후 재진입 허용</td></tr>
+</tbody></table></div><div class="note"><b>비용 구분:</b> 일일 매매일지의 표시 수익률은 전략 경로의 원수익률입니다. 이 연구 보고서의 기준선·OOS 비교에는 편도 0.10% 비용을 적용했습니다.</div><h2>2016–2026 순수 OOS 누적 결과</h2><div class="scroll"><table class="dataframe data">
   <thead>
     <tr style="text-align: right;">
       <th>config</th>
