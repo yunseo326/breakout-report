@@ -1,5 +1,11 @@
 [
   {
+    "slug": "trading-strategy-dashboard",
+    "title": "Trading 전체 전략 마스터 대시보드",
+    "description": "US·KR 전략 토너먼트, 비용 반영 기대수익률, walk-forward OOS, CAGR·MDD와 자본제약 실험 종합",
+    "updated": "2026-09-10"
+  },
+  {
     "slug": "progress",
     "title": "전체 실험 진행 기록",
     "description": "2026년 8월 23일부터 이어진 전략 구현·백테스트·오류 수정·의사결정의 전체 시간순 기록",
