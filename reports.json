@@ -1,14 +1,14 @@
 [
   {
-    "slug": "s8-reverse-design",
-    "title": "S8 역설계·상태청산·후보교체 연구",
-    "description": "현재 S8 매매 규칙을 쉬운 해설과 함께 설명하고 여러 변경 방법의 연도별 OOS 성과를 비교",
-    "updated": "2026-09-09"
-  },
-  {
     "slug": "best5-recommendation-manager",
     "title": "Best5 최근 7일 추천·보유 관리",
     "description": "최신 완료 거래일 신호와 다음 거래일 시가 대기 후보를 진입가 미확정 상태로 표시하는 추천 관리 화면",
+    "updated": "2026-09-10"
+  },
+  {
+    "slug": "s8-reverse-design",
+    "title": "S8 역설계·상태청산·후보교체 연구",
+    "description": "현재 S8 매매 규칙을 쉬운 해설과 함께 설명하고 여러 변경 방법의 연도별 OOS 성과를 비교",
     "updated": "2026-09-09"
   },
   {
