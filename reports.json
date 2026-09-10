@@ -12,6 +12,12 @@
     "updated": "2026-09-10"
   },
   {
+    "slug": "trading-letf",
+    "title": "레버리지 ETF 전략 백테스트",
+    "description": "레버리지 ETF 자산배분·로테이션 전략의 수익률과 위험 비교",
+    "updated": "2026-09-10"
+  },
+  {
     "slug": "trading-dca-ninesig",
     "title": "적립식 투자와 9Sig 다중검증",
     "description": "TQQQ·QLD·QQQ 적립식 투자와 9Sig 전략의 기간·주기·일시불 비교",

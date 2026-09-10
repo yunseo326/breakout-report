@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>레버리지 ETF 전략 백테스트 결과</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-0: #f6f4ee; --surface-1: #fbfaf6; --surface-2: #edeae0;
+    --border: #ddd8ca; --border-soft: #e8e4d8;
+    --text-primary: #1c1a15; --text-secondary: #5c584c; --text-muted: #8b8676;
+    --accent: #2a78d6; --accent-ink: #184f95; --accent-tint: #e4eefb;
+    --shadow: 0 1px 2px rgba(28,26,21,.04), 0 8px 24px -12px rgba(28,26,21,.18);
+    --slot-static: #2a78d6; --slot-timing: #eb6834; --slot-adaptive: #1baf7a;
+    --slot-neg: #e34948;
+    --slot-static-tint: #e4eefb; --slot-neg-tint: #fbe6e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface-0: #14161b; --surface-1: #1b1e24; --surface-2: #242832;
+      --border: #333844; --border-soft: #2b2f39;
+      --text-primary: #f1efe8; --text-secondary: #b8b4a8; --text-muted: #7d7a70;
+      --accent: #4a90e8; --accent-ink: #9cc4f5; --accent-tint: #1c2a3d;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+      --slot-static: #3987e5; --slot-timing: #d95926; --slot-adaptive: #199e70;
+      --slot-neg: #e66767;
+      --slot-static-tint: #1c2a3d; --slot-neg-tint: #3a2222;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-0: #14161b; --surface-1: #1b1e24; --surface-2: #242832;
+    --border: #333844; --border-soft: #2b2f39;
+    --text-primary: #f1efe8; --text-secondary: #b8b4a8; --text-muted: #7d7a70;
+    --accent: #4a90e8; --accent-ink: #9cc4f5; --accent-tint: #1c2a3d;
+    --slot-static: #3987e5; --slot-timing: #d95926; --slot-adaptive: #199e70;
+    --slot-neg: #e66767; --slot-static-tint: #1c2a3d; --slot-neg-tint: #3a2222;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --surface-0: #f6f4ee; --surface-1: #fbfaf6; --surface-2: #edeae0;
+    --border: #ddd8ca; --border-soft: #e8e4d8;
+    --text-primary: #1c1a15; --text-secondary: #5c584c; --text-muted: #8b8676;
+    --accent: #2a78d6; --accent-ink: #184f95; --accent-tint: #e4eefb;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--surface-0); color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 48px 28px 80px; }
+  header.masthead { border-bottom: 1px solid var(--border); padding-bottom: 28px; margin-bottom: 36px; }
+  .eyebrow { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin: 0 0 10px; }
+  h1 {
+    font-family: ui-serif, Georgia, "Times New Roman", serif; font-weight: 500;
+    font-size: clamp(28px, 4vw, 40px); line-height: 1.15; letter-spacing: -.01em;
+    margin: 0 0 12px; text-wrap: balance; max-width: 22ch;
+  }
+  .dek { font-size: 16px; color: var(--text-secondary); max-width: 66ch; margin: 0; }
+  .dek strong { color: var(--text-primary); font-weight: 600; }
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 44px; }
+  .stat { background: var(--surface-1); padding: 20px 20px 18px; }
+  .stat .label { font-size: 12px; color: var(--text-muted); margin: 0 0 8px; }
+  .stat .value { font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace; font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.02em; margin: 0 0 4px; }
+  .stat .sub { font-size: 12.5px; color: var(--text-secondary); margin: 0; }
+  .stat.highlight { background: var(--accent-tint); }
+  .stat.highlight .value { color: var(--accent-ink); }
+  section { margin-bottom: 52px; }
+  h2 { font-family: ui-serif, Georgia, serif; font-weight: 500; font-size: 21px; margin: 0 0 4px; }
+  .section-note { font-size: 13.5px; color: var(--text-secondary); margin: 0 0 20px; max-width: 72ch; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 8px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1); font-size: 12.5px; color: var(--text-secondary); cursor: pointer; user-select: none; }
+  .chip:hover { border-color: var(--text-muted); }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .chip[data-active="false"] { opacity: .35; }
+  .chip:focus-visible, .th-sort:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .chart-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px 8px; box-shadow: var(--shadow); }
+  .chart-wrap { overflow-x: auto; }
+  #scatter { display: block; width: 100%; height: auto; min-width: 560px; }
+  .axis-line { stroke: var(--border); stroke-width: 1; }
+  .grid-line { stroke: var(--border-soft); stroke-width: 1; }
+  .axis-label { fill: var(--text-muted); font-size: 11px; }
+  .axis-title { fill: var(--text-secondary); font-size: 11.5px; }
+  .quad-label { fill: var(--text-muted); font-size: 10.5px; font-style: italic; }
+  .pt { stroke: var(--surface-1); stroke-width: 1.5; cursor: pointer; }
+  .pt-label { font-size: 10.5px; fill: var(--text-secondary); pointer-events: none; }
+  .pt-label.emph { fill: var(--text-primary); font-weight: 600; }
+  #tooltip { position: fixed; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: 12px; line-height: 1.45; padding: 8px 11px; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,.25); opacity: 0; transform: translate(-50%, calc(-100% - 12px)); transition: opacity .1s ease; z-index: 20; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  #tooltip.show { opacity: 1; }
+  #tooltip .tt-title { font-weight: 600; margin-bottom: 2px; }
+  #tooltip .tt-row { display: flex; gap: 10px; justify-content: space-between; }
+  #tooltip .tt-row span:first-child { opacity: .65; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; background: var(--surface-1); font-size: 13.5px; min-width: 920px; }
+  thead th { position: sticky; top: 0; background: var(--surface-2); text-align: left; font-weight: 600; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); padding: 11px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .th-sort { background: none; border: none; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 4px; }
+  .th-sort .arrow { font-size: 9px; opacity: .4; }
+  .th-sort[data-sorted="true"] .arrow { opacity: 1; color: var(--accent); }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border-soft); vertical-align: middle; color: var(--text-primary); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--surface-2); }
+  tbody tr.hidden-row { display: none; }
+  td.num { font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace; font-variant-numeric: tabular-nums; text-align: right; }
+  .strat-name { font-weight: 600; }
+  .strat-sub { display: block; font-size: 11.5px; color: var(--text-muted); font-weight: 400; margin-top: 1px; }
+  .fam-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--text-secondary); white-space: nowrap; }
+  .fam-chip .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .bar-cell { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .bar-track { width: 56px; height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; flex: none; }
+  .bar-fill { height: 100%; border-radius: 3px; background: var(--text-muted); }
+  .bar-fill.pos { background: var(--slot-static); }
+  .bar-fill.neg { background: var(--slot-neg); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill.pos { background: var(--slot-static-tint); color: var(--accent-ink); }
+  .pill.neg { background: var(--slot-neg-tint); color: var(--slot-neg); }
+  footer { border-top: 1px solid var(--border); padding-top: 22px; font-size: 12.5px; color: var(--text-muted); max-width: 78ch; }
+  footer p { margin: 0 0 8px; }
+  footer code { font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+  @media (max-width: 720px) { .stats { grid-template-columns: repeat(2,1fr); } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="eyebrow">letf_run.py 백테스트 결과 (자동 생성)</p>
+    <h1>레버리지 ETF 전략 26종 비교</h1>
+    <p class="dek">
+      TQQQ · QLD · QQQ 중심 자산배분·로테이션 전략의 변형 26개를 동일한 비용
+      모델(왕복 0.05%)로 백테스트. Calmar 비율(CAGR/|MDD|) 기준
+      <strong>변동성타겟팅 · TQQQ(CAGR 28.5%, MDD -43.9%)</strong>이 이 배치 전체에서
+      가장 안정적인 위험조정 성과를 냈다.
+    </p>
+  </header>
+
+  <div class="stats">
+    <div class="stat">
+      <p class="label">테스트한 전략 변형</p>
+      <p class="value">26개</p>
+      <p class="sub">letf_summary.csv 자동 반영</p>
+    </div>
+    <div class="stat">
+      <p class="label">최고 CAGR</p>
+      <p class="value">41.8%</p>
+      <p class="sub">TQQQ 매수·보유 (MDD -81.7%)</p>
+    </div>
+    <div class="stat highlight">
+      <p class="label">최고 위험조정 성과 (Calmar)</p>
+      <p class="value">변동성타겟팅 · TQQQ</p>
+      <p class="sub">CAGR 28.5% · MDD -43.9%</p>
+    </div>
+    <div class="stat">
+      <p class="label">변동성타겟팅 · TQQQ 5년 롤링 최악구간</p>
+      <p class="value">12.2%</p>
+      <p class="sub">여러 5년 창 스캔 중 최저치</p>
+    </div>
+  </div>
+
+  <section id="scatter-section">
+    <h2>위험 / 수익 지도</h2>
+    <p class="section-note">가로축 = 최대낙폭(MDD, 클수록 오른쪽=위험), 세로축 = CAGR(위로 갈수록 고수익). 이상적인 위치는 좌상단. 범례를 클릭하면 켜고 끌 수 있다.</p>
+    <div class="legend" id="legend"></div>
+    <div class="chart-card">
+      <div class="chart-wrap"><svg id="scatter" viewBox="0 0 900 480" preserveAspectRatio="xMinYMin meet"></svg></div>
+    </div>
+  </section>
+
+  <section id="table-section">
+    <h2>전체 결과표</h2>
+    <p class="section-note">열 제목을 클릭하면 정렬된다. 5년 롤링 최악 구간이 음수인 전략은 해당 5년 동안 원금 손실 구간이 있었다는 뜻이다.</p>
+    <div class="table-scroll">
+      <table id="results-table">
+        <thead><tr>
+          <th style="min-width:230px"><button class="th-sort" data-key="name" data-type="string">전략 <span class="arrow">▾</span></button></th>
+          <th><button class="th-sort" data-key="fam" data-type="string">계열 <span class="arrow">▾</span></button></th>
+          <th><button class="th-sort" data-key="period" data-type="string">기간 <span class="arrow">▾</span></button></th>
+          <th style="text-align:right"><button class="th-sort" data-key="cagr" data-type="num">CAGR <span class="arrow">▾</span></button></th>
+          <th style="text-align:right"><button class="th-sort" data-key="cum" data-type="num">누적수익률 <span class="arrow">▾</span></button></th>
+          <th style="text-align:right"><button class="th-sort" data-key="vol" data-type="num">연변동성 <span class="arrow">▾</span></button></th>
+          <th style="text-align:right"><button class="th-sort" data-key="mdd" data-type="num">MDD <span class="arrow">▾</span></button></th>
+          <th style="text-align:right"><button class="th-sort" data-key="best5y" data-type="num">5y 최선 <span class="arrow">▾</span></button></th>
+          <th style="text-align:right"><button class="th-sort" data-key="worst5y" data-type="num">5y 최악 <span class="arrow">▾</span></button></th>
+        </tr></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>가정</strong>: 배당 재투자 반영 total-return(Adj Close) 기준, 거래비용 왕복 <code>0.05%</code> 반영, 신호 확정일 종가 다음 거래일부터 체결(letf_engine.py 참고). walk-forward out-of-sample 분리는 아직 하지 않은 전체 히스토리 단일 경로 결과 — 탐색적 비교용.</p>
+    <p>데이터 출처: FinanceDataReader(Adj Close), CBOE VIX, Robert Shiller 공식 CAPE 데이터. 원본 CSV·로그는 <code>ALPHA_LOG.md</code> §7 참고. 이 페이지는 <code>letf_dashboard.py</code>가 <code>letf_summary.csv</code>로부터 자동 생성 — <code>letf_run.py</code> 재실행 후 재생성하면 최신 수치로 갱신된다.</p>
+  </footer>
+
+</div>
+<div id="tooltip"></div>
+
+<script>
+(function () {
+  "use strict";
+  var FAMILIES = {
+    static:   { label: "고정 익스포저 (스위칭 없음)",  color: "var(--slot-static)"   },
+    timing:   { label: "타이밍/로테이션 (자산 전환)",   color: "var(--slot-timing)"   },
+    adaptive: { label: "연속 조정 (리밸런싱·사이징)",   color: "var(--slot-adaptive)" }
+  };
+  var DATA = [{"id": "S1_buyhold_TQQQ_since_inception", "name": "TQQQ 매수·보유", "sub": "상장일부터", "fam": "static", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.4177393154324738, "cum": 310.3113800723412, "vol": 0.6117448055036262, "mdd": -0.816598497450931, "best5y": 0.7393439725671609, "worst5y": 0.0748678009783414, "label": true, "hero": false}, {"id": "S1_buyhold_QLD_since_inception", "name": "QLD 매수·보유", "sub": "상장일부터", "fam": "static", "start": "2006-06-21", "end": "2026-07-24", "cagr": 0.2470942201566655, "cum": 83.45973971039821, "vol": 0.4396340987492701, "mdd": -0.8312886327022614, "best5y": 0.5864777680102178, "worst5y": -0.001482836922557, "label": false, "hero": false}, {"id": "S1_buyhold_QQQ_since_inception", "name": "QQQ 매수·보유", "sub": "상장일부터", "fam": "static", "start": "1999-03-10", "end": "2026-07-24", "cagr": 0.1063489295632291, "cum": 14.902317221143276, "vol": 0.2693946723799073, "mdd": -0.8296390112050731, "best5y": 0.2904607136622741, "worst5y": -0.187966899720314, "label": false, "hero": false}, {"id": "S1_buyhold_TQQQ_common_period", "name": "TQQQ 매수·보유", "sub": "공통기간(=상장일부터와 동일)", "fam": "static", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.4177393154324738, "cum": 310.3113800723412, "vol": 0.6117448055036262, "mdd": -0.816598497450931, "best5y": 0.7393439725671609, "worst5y": 0.0748678009783414, "label": false, "hero": false}, {"id": "S1_buyhold_QLD_common_period", "name": "QLD 매수·보유", "sub": "공통기간(TQQQ 상장일부터)", "fam": "static", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.3240457387528384, "cum": 100.12287632428388, "vol": 0.412205638003911, "mdd": -0.6368449133652747, "best5y": 0.5281465549022477, "worst5y": 0.1320451841674801, "label": false, "hero": false}, {"id": "S1_buyhold_QQQ_common_period", "name": "QQQ 매수·보유", "sub": "공통기간(TQQQ 상장일부터)", "fam": "static", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.1924232106547789, "cum": 17.071546350412913, "vol": 0.2066537253402989, "mdd": -0.35118730046375, "best5y": 0.2834475551541124, "worst5y": 0.1172363087801662, "label": false, "hero": false}, {"id": "S2_ma200_TQQQ_no_buffer", "name": "200일선 필터 · TQQQ", "sub": "버퍼 없음", "fam": "timing", "start": "2010-11-24", "end": "2026-07-24", "cagr": 0.3230573736112119, "cum": 79.22625769219613, "vol": 0.4672725855019902, "mdd": -0.556719619728173, "best5y": 0.5795617829026363, "worst5y": 0.0729090390103786, "label": false, "hero": false}, {"id": "S2_ma200_TQQQ_buffer_4.5_3", "name": "200일선 필터 · TQQQ", "sub": "+4.5% / -3% 버퍼", "fam": "timing", "start": "2010-11-24", "end": "2026-07-24", "cagr": 0.294672034548683, "cum": 56.11968972277035, "vol": 0.4638928305932309, "mdd": -0.6574221805608975, "best5y": 0.5774379162743701, "worst5y": 0.0686041300794708, "label": false, "hero": false}, {"id": "S2_ma200_QLD_no_buffer", "name": "200일선 필터 · QLD", "sub": "버퍼 없음", "fam": "timing", "start": "2007-04-09", "end": "2026-07-24", "cagr": 0.2105187940170581, "cum": 38.86532741717182, "vol": 0.3116128306264203, "mdd": -0.4348756081650724, "best5y": 0.4016941706587111, "worst5y": 0.0130047513876923, "label": false, "hero": false}, {"id": "S2_ma200_QLD_buffer_4.5_3", "name": "200일선 필터 · QLD", "sub": "+4.5% / -3% 버퍼", "fam": "timing", "start": "2007-04-09", "end": "2026-07-24", "cagr": 0.207117259327741, "cum": 36.758990436634505, "vol": 0.3077317612044944, "mdd": -0.4939902370067938, "best5y": 0.4066817095315791, "worst5y": 0.0461587828434004, "label": false, "hero": false}, {"id": "S7_ma200_buffer4_3_TQQQ", "name": "200일선+배율고정 · TQQQ", "sub": "+4% / -3% 버퍼", "fam": "timing", "start": "2010-11-24", "end": "2026-07-24", "cagr": 0.3000930624397766, "cum": 59.98310267570054, "vol": 0.4647095696983624, "mdd": -0.6574221805608975, "best5y": 0.5806023973802752, "worst5y": 0.073742626068523, "label": false, "hero": false}, {"id": "S7_ma200_buffer4_3_QLD", "name": "200일선+배율고정 · QLD", "sub": "+4% / -3% 버퍼", "fam": "timing", "start": "2007-04-09", "end": "2026-07-24", "cagr": 0.211547009257526, "cum": 39.523647832182085, "vol": 0.3087128288076038, "mdd": -0.4939902370067937, "best5y": 0.4085745204421693, "worst5y": 0.0558798768282982, "label": false, "hero": false}, {"id": "S4_HFEA_UPRO55_TMF45", "name": "HFEA", "sub": "UPRO 55% / TMF 45%, 분기 리밸런싱", "fam": "adaptive", "start": "2009-06-25", "end": "2026-07-24", "cagr": 0.2418270550251686, "cum": 39.405719773648656, "vol": 0.2914039376042045, "mdd": -0.7073080856118359, "best5y": 0.510104824823916, "worst5y": -0.0397617686594481, "label": false, "hero": false}, {"id": "S5_9Sig_TQQQ60_AGG40", "name": "9Sig", "sub": "TQQQ 60% / AGG 40%", "fam": "adaptive", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.4076776000328148, "cum": 275.9004573387813, "vol": 0.4147833189199381, "mdd": -0.6365973823198119, "best5y": 0.6529437109392138, "worst5y": 0.1870709191088866, "label": true, "hero": false}, {"id": "S6_dual_momentum_GEM", "name": "듀얼모멘텀 GEM", "sub": "QQQ / VEU / AGG / BIL", "fam": "timing", "start": "2007-05-30", "end": "2026-07-24", "cagr": 0.1298794671827945, "cum": 9.366500728956629, "vol": 0.1837361561517094, "mdd": -0.2855938050241374, "best5y": 0.2493492685288196, "worst5y": 0.0536041403761693, "label": true, "hero": false}, {"id": "S8_infinite_buying_TQQQ_target10pct", "name": "무한매수법 · TQQQ", "sub": "목표 +10%", "fam": "adaptive", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.0927956017967244, "cum": 3.3034996744191067, "vol": 0.2093371574471793, "mdd": -0.5726635323195222, "best5y": 0.2166985188201406, "worst5y": -0.0812476010059681, "label": false, "hero": false}, {"id": "S8_infinite_buying_TQQQ_target15pct", "name": "무한매수법 · TQQQ", "sub": "목표 +15%", "fam": "adaptive", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.1105159957731469, "cum": 4.606779045844449, "vol": 0.2097960762230126, "mdd": -0.5402071480050092, "best5y": 0.2517500776400725, "worst5y": -0.0639832552468691, "label": false, "hero": false}, {"id": "S9_valuation_drawdown_vix", "name": "밸류에이션+낙폭+VIX", "sub": "CAPE 실데이터(1881-2023-09)", "fam": "timing", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.0111820096598971, "cum": 0.2006724185872266, "vol": 0.0556676476700298, "mdd": -0.1908108874991745, "best5y": 0.0313083737502264, "worst5y": -0.0137763663802935, "label": true, "hero": false}, {"id": "S10_faber_10m_sma_TQQQ", "name": "Faber 10개월선 · TQQQ", "sub": "월간 신호", "fam": "timing", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.2857110971003951, "cum": 61.373722581937066, "vol": 0.4960090386830381, "mdd": -0.6992207476208725, "best5y": 0.580886278207712, "worst5y": 0.0305412917317773, "label": false, "hero": false}, {"id": "S10_faber_10m_sma_QLD", "name": "Faber 10개월선 · QLD", "sub": "월간 신호", "fam": "timing", "start": "2006-06-21", "end": "2026-07-24", "cagr": 0.1916911646026666, "cum": 32.896566572360946, "vol": 0.3303869295898636, "mdd": -0.5171543200016027, "best5y": 0.4083093561508364, "worst5y": -0.0083447961298982, "label": false, "hero": false}, {"id": "S11_vol_targeted_TQQQ_30pct", "name": "변동성타겟팅 · TQQQ", "sub": "목표 연변동성 30%", "fam": "adaptive", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.2851128819163928, "cum": 60.89814299737876, "vol": 0.3267747035109825, "mdd": -0.4392392688580572, "best5y": 0.4423949124785205, "worst5y": 0.1218657958554363, "label": true, "hero": true}, {"id": "S11_vol_targeted_QLD_30pct", "name": "변동성타겟팅 · QLD", "sub": "목표 연변동성 30%", "fam": "adaptive", "start": "2006-06-21", "end": "2026-07-24", "cagr": 0.2367142686102252, "cum": 70.40422049081396, "vol": 0.2943014106417844, "mdd": -0.566273364016505, "best5y": 0.4043832516961156, "worst5y": 0.0698167658561177, "label": false, "hero": false}, {"id": "S12_DCA_TQQQ_12m", "name": "DCA 12개월 분할매수", "sub": "TQQQ, 대기현금 SHY", "fam": "adaptive", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.3959345541847285, "cum": 240.26248980731788, "vol": 0.5994575773168552, "mdd": -0.8165396769397191, "best5y": 0.7389305054283182, "worst5y": 0.074836747676164, "label": false, "hero": false}, {"id": "S12_lumpsum_TQQQ_same_start", "name": "일시불 매수 (비교군)", "sub": "TQQQ, DCA와 같은 시작일", "fam": "static", "start": "2010-03-01", "end": "2026-07-24", "cagr": 0.409356139031902, "cum": 276.6460693517979, "vol": 0.6122509370997484, "mdd": -0.8165984974509309, "best5y": 0.7393439725671607, "worst5y": 0.0748678009783414, "label": false, "hero": false}, {"id": "S13_ichimoku_TQQQ", "name": "일목균형표 · TQQQ", "sub": "구름+전환선>기준선", "fam": "timing", "start": "2010-02-11", "end": "2026-07-24", "cagr": 0.254255859267352, "cum": 40.50352333822344, "vol": 0.3477001392337198, "mdd": -0.4944032882345596, "best5y": 0.4530744089287526, "worst5y": 0.0600728384382012, "label": false, "hero": false}, {"id": "S13_ichimoku_QLD", "name": "일목균형표 · QLD", "sub": "구름+전환선>기준선", "fam": "timing", "start": "2006-06-21", "end": "2026-07-24", "cagr": 0.1624069007529134, "cum": 19.56215562514302, "vol": 0.2386909617457757, "mdd": -0.3586815111457382, "best5y": 0.3029371301558794, "worst5y": 0.0185104670737223, "label": false, "hero": false}];
+
+  function pct(x, digits) { return (x * 100).toFixed(digits == null ? 1 : digits) + "%"; }
+  function fmtCum(x) { return "+" + Math.round(x * 100) + "%"; }
+  function famColor(fam) { return FAMILIES[fam].color; }
+
+  var legendEl = document.getElementById("legend");
+  var activeFamilies = {};
+  Object.keys(FAMILIES).forEach(function (k) { activeFamilies[k] = true; });
+  Object.keys(FAMILIES).forEach(function (key) {
+    var chip = document.createElement("button");
+    chip.className = "chip"; chip.type = "button"; chip.dataset.fam = key; chip.dataset.active = "true";
+    chip.innerHTML = '<span class="dot" style="background:' + FAMILIES[key].color + '"></span>' + FAMILIES[key].label;
+    chip.addEventListener("click", function () {
+      activeFamilies[key] = !activeFamilies[key];
+      chip.dataset.active = String(activeFamilies[key]);
+      applyFilter();
+    });
+    legendEl.appendChild(chip);
+  });
+  function applyFilter() {
+    document.querySelectorAll(".pt, .pt-label").forEach(function (el) {
+      el.style.display = activeFamilies[el.dataset.fam] ? "" : "none";
+    });
+    document.querySelectorAll("#table-body tr").forEach(function (tr) {
+      tr.classList.toggle("hidden-row", !activeFamilies[tr.dataset.fam]);
+    });
+  }
+
+  var svg = document.getElementById("scatter");
+  var W = 900, H = 480, M = { top: 20, right: 28, bottom: 46, left: 54 };
+  var plotW = W - M.left - M.right, plotH = H - M.top - M.bottom;
+  var xMax = 90, yMax = 45, yMin = -5;
+  function xScale(mddFrac) { return M.left + (Math.abs(mddFrac) * 100 / xMax) * plotW; }
+  function yScale(cagrFrac) { var v = cagrFrac * 100; return M.top + (1 - (v - yMin) / (yMax - yMin)) * plotH; }
+  var svgns = "http://www.w3.org/2000/svg";
+  function el(tag, attrs) { var e = document.createElementNS(svgns, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+
+  for (var gx = 0; gx <= xMax; gx += 15) {
+    svg.appendChild(el("line", { x1: xScale(-gx/100), y1: M.top, x2: xScale(-gx/100), y2: M.top + plotH, class: "grid-line" }));
+    var lx = el("text", { x: xScale(-gx/100), y: M.top + plotH + 18, class: "axis-label", "text-anchor": "middle" });
+    lx.textContent = gx + "%"; svg.appendChild(lx);
+  }
+  for (var gy = 0; gy <= yMax; gy += 10) {
+    svg.appendChild(el("line", { x1: M.left, y1: yScale(gy/100), x2: M.left + plotW, y2: yScale(gy/100), class: "grid-line" }));
+    var ly = el("text", { x: M.left - 10, y: yScale(gy/100) + 4, class: "axis-label", "text-anchor": "end" });
+    ly.textContent = gy + "%"; svg.appendChild(ly);
+  }
+  svg.appendChild(el("line", { x1: M.left, y1: M.top + plotH, x2: M.left + plotW, y2: M.top + plotH, class: "axis-line" }));
+  svg.appendChild(el("line", { x1: M.left, y1: M.top, x2: M.left, y2: M.top + plotH, class: "axis-line" }));
+  var xt = el("text", { x: M.left + plotW / 2, y: H - 6, class: "axis-title", "text-anchor": "middle" });
+  xt.textContent = "최대낙폭 MDD (%, 0%가 최선 → 오른쪽일수록 위험)"; svg.appendChild(xt);
+  var ytBg = el("text", { x: 16, y: M.top + plotH / 2, class: "axis-title", "text-anchor": "middle", transform: "rotate(-90 16 " + (M.top + plotH / 2) + ")" });
+  ytBg.textContent = "CAGR (%, 위로 갈수록 고수익)"; svg.appendChild(ytBg);
+  var quad = el("text", { x: M.left + 10, y: M.top + 16, class: "quad-label" }); quad.textContent = "◤ 저위험 · 고수익"; svg.appendChild(quad);
+
+  var tooltip = document.getElementById("tooltip");
+  function showTooltip(ev, d) {
+    tooltip.innerHTML =
+      '<div class="tt-title">' + d.name + (d.sub ? " · " + d.sub : "") + '</div>' +
+      '<div class="tt-row"><span>CAGR</span><span>' + pct(d.cagr) + '</span></div>' +
+      '<div class="tt-row"><span>MDD</span><span>' + pct(d.mdd) + '</span></div>' +
+      '<div class="tt-row"><span>연변동성</span><span>' + pct(d.vol) + '</span></div>' +
+      '<div class="tt-row"><span>5y 최선/최악</span><span>' + pct(d.best5y, 0) + ' / ' + pct(d.worst5y, 0) + '</span></div>' +
+      '<div class="tt-row"><span>기간</span><span>' + d.start + ' ~ ' + d.end + '</span></div>';
+    tooltip.classList.add("show"); moveTooltip(ev);
+  }
+  function moveTooltip(ev) { tooltip.style.left = ev.clientX + "px"; tooltip.style.top = ev.clientY + "px"; }
+  function hideTooltip() { tooltip.classList.remove("show"); }
+
+  DATA.forEach(function (d) {
+    var cx = xScale(d.mdd), cy = yScale(d.cagr);
+    var c = el("circle", { cx: cx, cy: cy, r: d.hero ? 8 : 6, fill: famColor(d.fam), class: "pt", "data-fam": d.fam });
+    if (d.hero) c.setAttribute("stroke-width", "2.5");
+    c.addEventListener("mouseenter", function (ev) { showTooltip(ev, d); });
+    c.addEventListener("mousemove", function (ev) { moveTooltip(ev); });
+    c.addEventListener("mouseleave", hideTooltip);
+    svg.appendChild(c);
+    if (d.label) {
+      var t = el("text", { x: cx + 10, y: cy - 9, class: "pt-label" + (d.hero ? " emph" : ""), "data-fam": d.fam });
+      t.textContent = d.name + (d.sub && d.sub.length < 12 ? " · " + d.sub : "");
+      svg.appendChild(t);
+    }
+  });
+
+  var tbody = document.getElementById("table-body");
+  function rowsFromData() {
+    return DATA.map(function (d) {
+      return { id: d.id, name: d.name, sub: d.sub, fam: d.fam, period: d.start + " ~ " + d.end,
+        cagr: d.cagr, cum: d.cum, vol: d.vol, mdd: d.mdd, best5y: d.best5y, worst5y: d.worst5y };
+    });
+  }
+  function renderTable(rows) {
+    tbody.innerHTML = "";
+    rows.forEach(function (r) {
+      var tr = document.createElement("tr");
+      tr.dataset.fam = r.fam;
+      if (!activeFamilies[r.fam]) tr.classList.add("hidden-row");
+      var mddBarPct = Math.min(100, Math.abs(r.mdd) / 0.9 * 100);
+      var cagrBarPct = Math.min(100, Math.abs(r.cagr) / 0.45 * 100);
+      var worstPos = r.worst5y >= 0;
+      tr.innerHTML =
+        '<td><span class="strat-name">' + r.name + '</span>' + (r.sub ? '<span class="strat-sub">' + r.sub + '</span>' : '') + '</td>' +
+        '<td><span class="fam-chip"><span class="dot" style="background:' + famColor(r.fam) + '"></span>' + FAMILIES[r.fam].label + '</span></td>' +
+        '<td style="color:var(--text-secondary);white-space:nowrap;font-size:12.5px">' + r.period + '</td>' +
+        '<td class="num"><div class="bar-cell"><div class="bar-track"><div class="bar-fill pos" style="width:' + cagrBarPct + '%"></div></div>' + pct(r.cagr) + '</div></td>' +
+        '<td class="num">' + fmtCum(r.cum) + '</td>' +
+        '<td class="num">' + pct(r.vol) + '</td>' +
+        '<td class="num"><div class="bar-cell"><div class="bar-track"><div class="bar-fill neg" style="width:' + mddBarPct + '%"></div></div>' + pct(r.mdd) + '</div></td>' +
+        '<td class="num">' + pct(r.best5y) + '</td>' +
+        '<td class="num"><span class="pill ' + (worstPos ? "pos" : "neg") + '">' + pct(r.worst5y) + '</span></td>';
+      tbody.appendChild(tr);
+    });
+  }
+  var currentRows = rowsFromData();
+  renderTable(currentRows);
+  var sortState = { key: null, dir: 1 };
+  document.querySelectorAll(".th-sort").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.dataset.key, type = btn.dataset.type;
+      if (sortState.key === key) sortState.dir *= -1; else { sortState.key = key; sortState.dir = 1; }
+      document.querySelectorAll(".th-sort").forEach(function (b) { b.dataset.sorted = "false"; b.querySelector(".arrow").textContent = "▾"; });
+      btn.dataset.sorted = "true"; btn.querySelector(".arrow").textContent = sortState.dir === 1 ? "▾" : "▴";
+      currentRows.sort(function (a, b) {
+        var av = a[key], bv = b[key];
+        if (type === "string") { av = String(av).toLowerCase(); bv = String(bv).toLowerCase(); }
+        if (av < bv) return -1 * sortState.dir;
+        if (av > bv) return 1 * sortState.dir;
+        return 0;
+      });
+      renderTable(currentRows);
+    });
+  });
+})();
+</script>
+</body>
+</html>
