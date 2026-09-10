@@ -1,35 +1,5 @@
 [
   {
-    "slug": "trading-top5-guide",
-    "title": "Trading 상위 5개 전략 적용 가이드",
-    "description": "상위 5개 전략의 CAGR·MDD, 손익비 민감도, 스크리닝 주기와 적용 조건",
-    "updated": "2026-09-10"
-  },
-  {
-    "slug": "trading-strategy-dashboard",
-    "title": "Trading 전체 전략 마스터 대시보드",
-    "description": "US·KR 전략 토너먼트, 비용 반영 기대수익률, walk-forward OOS, CAGR·MDD와 자본제약 실험 종합",
-    "updated": "2026-09-10"
-  },
-  {
-    "slug": "trading-progress",
-    "title": "Trading 백테스트 전체 진행 기록",
-    "description": "2026년 7~8월 US·KR 전략 토너먼트, walk-forward OOS, 자산배분과 오류 수정의 시간순 기록",
-    "updated": "2026-09-10"
-  },
-  {
-    "slug": "trading-letf",
-    "title": "레버리지 ETF 전략 백테스트",
-    "description": "레버리지 ETF 자산배분·로테이션 전략의 수익률과 위험 비교",
-    "updated": "2026-09-10"
-  },
-  {
-    "slug": "trading-dca-ninesig",
-    "title": "적립식 투자와 9Sig 다중검증",
-    "description": "TQQQ·QLD·QQQ 적립식 투자와 9Sig 전략의 기간·주기·일시불 비교",
-    "updated": "2026-09-10"
-  },
-  {
     "slug": "progress",
     "title": "전체 실험 진행 기록",
     "description": "2026년 8월 23일부터 이어진 전략 구현·백테스트·오류 수정·의사결정의 전체 시간순 기록",
