@@ -1,5 +1,11 @@
 [
   {
+    "slug": "progress",
+    "title": "전체 실험 진행 기록",
+    "description": "2026년 8월 23일부터 이어진 전략 구현·백테스트·오류 수정·의사결정의 전체 시간순 기록",
+    "updated": "2026-09-10"
+  },
+  {
     "slug": "best5-recommendation-manager",
     "title": "Best5 최근 7일 추천·보유 관리",
     "description": "최신 완료 거래일 신호와 다음 거래일 시가 대기 후보를 진입가 미확정 상태로 표시하는 추천 관리 화면",
