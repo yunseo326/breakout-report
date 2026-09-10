@@ -6,15 +6,15 @@
     "updated": "2026-09-10"
   },
   {
-    "slug": "s8-reverse-design",
-    "title": "S8 역설계·상태청산·후보교체 연구",
-    "description": "현재 S8 매매 규칙을 쉬운 해설과 함께 설명하고 여러 변경 방법의 연도별 OOS 성과를 비교",
-    "updated": "2026-09-09"
-  },
-  {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
     "description": "ATR 기반 선택, 손절·목표 퍼센트, 목표 도달률, 청산 잔여시간과 전략 고정 정렬을 반영한 일일 대시보드",
+    "updated": "2026-09-10"
+  },
+  {
+    "slug": "s8-reverse-design",
+    "title": "S8 역설계·상태청산·후보교체 연구",
+    "description": "현재 S8 매매 규칙을 쉬운 해설과 함께 설명하고 여러 변경 방법의 연도별 OOS 성과를 비교",
     "updated": "2026-09-09"
   },
   {
