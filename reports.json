@@ -1,5 +1,11 @@
 [
   {
+    "slug": "trading-top5-guide",
+    "title": "Trading 상위 5개 전략 적용 가이드",
+    "description": "상위 5개 전략의 CAGR·MDD, 손익비 민감도, 스크리닝 주기와 적용 조건",
+    "updated": "2026-09-10"
+  },
+  {
     "slug": "trading-strategy-dashboard",
     "title": "Trading 전체 전략 마스터 대시보드",
     "description": "US·KR 전략 토너먼트, 비용 반영 기대수익률, walk-forward OOS, CAGR·MDD와 자본제약 실험 종합",
