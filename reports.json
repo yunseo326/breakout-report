@@ -12,6 +12,12 @@
     "updated": "2026-09-10"
   },
   {
+    "slug": "trading-progress",
+    "title": "Trading 백테스트 전체 진행 기록",
+    "description": "2026년 7~8월 US·KR 전략 토너먼트, walk-forward OOS, 자산배분과 오류 수정의 시간순 기록",
+    "updated": "2026-09-10"
+  },
+  {
     "slug": "trading-letf",
     "title": "레버리지 ETF 전략 백테스트",
     "description": "레버리지 ETF 자산배분·로테이션 전략의 수익률과 위험 비교",
