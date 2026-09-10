@@ -12,6 +12,12 @@
     "updated": "2026-09-10"
   },
   {
+    "slug": "trading-dca-ninesig",
+    "title": "적립식 투자와 9Sig 다중검증",
+    "description": "TQQQ·QLD·QQQ 적립식 투자와 9Sig 전략의 기간·주기·일시불 비교",
+    "updated": "2026-09-10"
+  },
+  {
     "slug": "progress",
     "title": "전체 실험 진행 기록",
     "description": "2026년 8월 23일부터 이어진 전략 구현·백테스트·오류 수정·의사결정의 전체 시간순 기록",
