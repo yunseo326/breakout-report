@@ -1,0 +1,21 @@
+﻿requested_role,current_paths,purpose,state
+AGENTS.md,AGENTS.md,작업 원칙·승인 범위·기록 규칙,유지
+CURRENT_STATE.md,CURRENT_STATE.md; WORKSPACE.md; experiments/profiles/primary_v1.json,현재 구현·검증 상태와 다음 차단 요인. WORKSPACE는 파일 지도,이번에 안내 문서 추가
+EXPERIMENTS.md,EXPERIMENTS.md; experiments/registry.csv; experiments/legacy_catalog.csv; experiments/legacy_ledger_index.csv,이미 해본 전략과 실행·결과·원장 위치를 찾아 중복 실험 방지,이번에 안내 문서 추가
+IDEAS.md,IDEAS.md; question.md,미시험 아이디어·데이터 차단·규칙 불명확 후보. question은 결정 대기 항목,이번에 안내 문서 추가
+results/,results/; incoming_experiments/; experiments/<experiment_id>/<run_id>/,"기존 결과, 이전 표준화 묶음, 새 Core 실행 묶음이 분산. 새 원본은 실행 폴더",역할 대응; 이동하지 않음
+reports/,reports/; experiments/<experiment_id>/<run_id>/report.html; outputs/; artifact/,"사람용 HTML/Markdown, 실행 보고서, Excel, 기존 대시보드",역할 대응; 이동하지 않음
+data/raw/,cache/prices/; cache/prices_long/; cache/universe/; cache/earnings/; cache/market_cap/; data/snapshots/,가격·유니버스·실적·시총 입력과 고정 스냅샷. 기존 조정 캐시는 검증된 raw 가격과 다름,raw 폴더는 아직 없음
+data/processed/,results/events_*.parquet; results/features_*.parquet; results/*candidates*.csv; data/snapshots/<hash>/features.*,재사용 가치가 큰 이벤트·피처·후보. 시점/버전/가격 기준이 같을 때 재사용,processed 폴더는 아직 없음
+src/engine/,strategy_evaluation/engine.py; strategy_evaluation/config.py; strategy_evaluation/interfaces.py,Core 연구 공통 실행·설정·Strategy/DataProvider 계약,src 폴더는 아직 없음
+src/data/,strategy_evaluation/data_provider.py; strategy_evaluation/snapshot.py; data_fetch.py; universe.py; fetch_daily_prices.py,입력 스냅샷 검증 및 기존 가격·유니버스 수집,역할 대응
+src/features/,features/; events/; strategy/research_strategies.py; strategy_evaluation/combinations.py,피처·신호 계산과 JSON 조합/threshold/조건 제거,역할 대응
+src/results/,strategy_evaluation/storage.py; strategy_evaluation/metrics.py; strategy_evaluation/regime.py,원장·Scorecard·일별 점유·국면/연도 집계. 지표 계산은 metrics.py,역할 대응
+src/reporting/,report_design.py; publish_report.py; strategy_evaluation/documentation.py; build_*report.py,보고서 생성·공통 스타일·GitHub Pages 발행,과거 개별 builder 포함
+src/validation/,strategy_evaluation/validation.py; tests/,"학습 라벨 분할 경계 제거, 시점 일관성·체결·슬롯·원장 재현 검증",tests는 독립 폴더 유지 권장
+추가 핵심: strategy/,strategy/,전략별 고유 신호·진입·청산 로직. 공통 엔진과 구분,유지
+추가 핵심: experiments/,experiments/examples/; experiments/profiles/; experiments/registry.csv,"실험 설정, 평가 조건, 실행 인덱스. 결과와 설정의 연결점",유지
+추가 핵심: history/,history/README.md; history/source_inventory.csv; history/legacy_sources_*.zip,기존 소스 보관·해시·원래 경로. 과거 결과의 재현 근거,삭제 대신 보존
+추가 핵심: docs/,docs/strategy_evaluation/WORKFLOW.md; docs/strategy_evaluation/reference/,현재 계약과 Core/Glossary/Output 원문. 원문과 구현 설명 구분,유지
+추가 핵심: 실행·운영,run_research.ps1; daily_one_click.py; portfolio_backtest.py; logs/,새 Core CLI와 기존 일일 운영 경로. 현재 엔진 전환은 새 연구에 한정,운영 엔진은 아직 legacy
+추가 핵심: 이력·탐색,progress.md; WORKSPACE.md; .rgignore,상세 시간순 기록·짧은 파일 지도·대용량 검색 제외,전체 로그를 매번 읽지 않음
