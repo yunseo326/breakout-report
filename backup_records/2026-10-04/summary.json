@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-04",
+  "timezone": "Asia/Seoul",
+  "repository": "yunseo326/breakout-report",
+  "branch": "backup/2026-10-04",
+  "parent_commit": "83a536439b561a4f7cb697cd033ad2c4c61298f9",
+  "original_remote_main": "83a536439b561a4f7cb697cd033ad2c4c61298f9",
+  "selected_file_count": 440,
+  "selected_bytes": 16391599,
+  "new_or_changed_files": 32,
+  "source_projects": [
+    "breakout-report"
+  ],
+  "sanitized_files": [],
+  "excluded_reason_counts": {
+    "git_metadata": 1
+  },
+  "restore_notes": "Static reports and chart JSON. Open index.html after recovery. Upstream daily generation depends on 2trading and must be configured separately. This backup does not trigger the main-only Pages workflow.",
+  "security_scan": {
+    "repo": "breakout-report",
+    "text_files": 440,
+    "bytes_scanned": 16392030,
+    "binary_not_secret_text_scanned": [],
+    "finding_count": 0
+  },
+  "reviewed_noncredential_hash_findings": [],
+  "unresolved_findings": [],
+  "source_programs_executed": false,
+  "local_unpushed_history_uploaded": false,
+  "python_parse_errors": [],
+  "new_metadata_files": 4,
+  "deleted_from_backup_tree_only": []
+}
