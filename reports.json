@@ -14,7 +14,7 @@
   {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
-    "description": "ATR 기반 선택, 손절·목표 퍼센트, 목표 도달률, 청산 잔여시간과 전략 고정 정렬을 반영한 일일 대시보드",
+    "description": "공통 백테스트 엔진의 누적 보유·6개월 매매 내역과 초기화·원본·ATR 성과 비교",
     "updated": "2026-11-12"
   },
   {
