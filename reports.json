@@ -6,6 +6,12 @@
     "updated": "2026-11-12"
   },
   {
+    "slug": "best5-daily-trades",
+    "title": "Best5 최근 6개월 매매 내역",
+    "description": "일일 스크리닝과 같은 검증 원장의 진입·청산·보유 내역, 종목·전략 검색과 CSV 다운로드",
+    "updated": "2026-11-12"
+  },
+  {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
     "description": "공통 백테스트 엔진의 누적 보유·6개월 매매 내역과 초기화·원본·ATR 성과 비교",
