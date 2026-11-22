@@ -14,8 +14,8 @@
   {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
-    "description": "공통 백테스트 엔진의 누적 보유·6개월 매매 내역과 초기화·원본·ATR 성과 비교",
-    "updated": "2026-11-19"
+    "description": "RMSE2·SN_MOM·A3 누적 보유·6개월 매매 내역과 과거 전략 성과 비교",
+    "updated": "2026-11-22"
   },
   {
     "slug": "research-structure",
