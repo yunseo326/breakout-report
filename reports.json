@@ -14,7 +14,7 @@
   {
     "slug": "best5-daily-dashboard",
     "title": "Best5 일일 매매 대시보드",
-    "description": "RMSE2·SN_MOM·A3 누적 보유·6개월 매매 내역과 과거 전략 성과 비교",
+    "description": "RMSE2·SN_MOM·A3 누적 보유·6개월 매매 내역과 과거 전략 성과 비교 (Alpaca·날짜별 S&P 500 구성종목)",
     "updated": "2026-11-24"
   },
   {
